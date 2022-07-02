@@ -1,14 +1,23 @@
 package paint.backend.model;
 
-public class Ellipse implements Figure {
+public class Ellipse extends Figure {
 
     protected final Point centerPoint;
-    protected final double sMayorAxis, sMinorAxis;
+    protected double sMayorAxis, sMinorAxis;
 
     public Ellipse(Point centerPoint, double sMayorAxis, double sMinorAxis) {
         this.centerPoint = centerPoint;
         this.sMayorAxis = sMayorAxis;
         this.sMinorAxis = sMinorAxis;
+    }
+
+    @Override
+    public void resize(double percentage){
+        //centerPoint no se modifica
+        //reduzco/agrando 10% sus ejes
+        double percentChange = 1 + percentage/100;
+        sMayorAxis *= percentChange;
+        sMinorAxis *= percentChange;
     }
 
     @Override
