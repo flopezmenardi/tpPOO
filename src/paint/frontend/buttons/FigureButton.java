@@ -5,5 +5,8 @@ import paint.backend.model.Figure;
 import paint.backend.model.Point;
 
 public abstract class FigureButton extends ToggleButton {
-    public abstract Figure drawFigure(Point startPoint, Point endPoint);
+    public FigureButton(String name){
+        super(name);
+    }
+    public  abstract Figure drawFigure(Point startPoint, Point endPoint);
 }

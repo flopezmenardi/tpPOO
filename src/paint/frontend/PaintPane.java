@@ -11,6 +11,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import paint.frontend.buttons.*;
 
 public class PaintPane extends BorderPane {
 
@@ -25,11 +26,12 @@ public class PaintPane extends BorderPane {
 
 	// Botones Barra Izquierda
 	private final ToggleButton selectionButton = new ToggleButton("Seleccionar");
-	private final ToggleButton rectangleButton = new ToggleButton("Rectángulo");
-	private final ToggleButton circleButton = new ToggleButton("Círculo");
-	private final ToggleButton squareButton = new ToggleButton("Cuadrado");
-	private final ToggleButton ellipseButton = new ToggleButton("Elipse");
+	private final FigureButton rectangleButton = new RectangleButton("Rectángulo");
+	private final FigureButton circleButton = new CircleButton("Círculo");
+	private final FigureButton squareButton = new SquareButton("Cuadrado");
+	private final FigureButton ellipseButton = new ElipseButton("Elipse");
 	private final ToggleButton deleteButton = new ToggleButton("Borrar");
+	private final ToggleButton resizeButton = new ToggleButton("resize");
 
 	// Dibujar una figura
 	private Point startPoint;
@@ -70,29 +72,18 @@ public class PaintPane extends BorderPane {
 				return ;
 			}
 			Figure newFigure = null;
-			if(rectangleButton.isSelected()) {
-				newFigure = new Rectangle(startPoint, endPoint);
+			FigureButton[] myButtons = new FigureButton[]{ellipseButton,circleButton,squareButton,rectangleButton};
+			for(FigureButton b: myButtons){
+				if(b.isSelected()){
+					newFigure = b.drawFigure(startPoint,endPoint);
+					}
 			}
-			else if(circleButton.isSelected()) {
-				double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
-				newFigure = new Circle(startPoint, circleRadius);
-			} else if(squareButton.isSelected()) {
-				double size = Math.abs(endPoint.getX() - startPoint.getX());
-				newFigure = new Square(startPoint, size);
-			} else if(ellipseButton.isSelected()) {
-				Point centerPoint = new Point(Math.abs(endPoint.getX() + startPoint.getX()) / 2, (Math.abs((endPoint.getY() + startPoint.getY())) / 2));
-				double sMayorAxis = Math.abs(endPoint.getX() - startPoint.getX());
-				double sMinorAxis = Math.abs(endPoint.getY() - startPoint.getY());
-				newFigure = new Ellipse(centerPoint, sMayorAxis, sMinorAxis);
-			} else {
-				return ;
-			}
-			canvasState.addFigure(newFigure);
+			if (newFigure != null) canvasState.addFigure(newFigure);
 			startPoint = null;
 			redrawCanvas();
 		});
 
-		canvas.setOnMouseMoved(event -> { //
+		canvas.setOnMouseMoved(event -> {
 			Point eventPoint = new Point(event.getX(), event.getY());
 			boolean found = false;
 			StringBuilder label = new StringBuilder();

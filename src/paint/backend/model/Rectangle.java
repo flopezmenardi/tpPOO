@@ -4,7 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class Rectangle extends Figure {
 
-    protected final Point topLeft, bottomRight;
+    private final Point topLeft, bottomRight;
 
     public Rectangle(Point topLeft, Point bottomRight) {
         this.topLeft = topLeft;

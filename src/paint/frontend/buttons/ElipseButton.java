@@ -5,6 +5,7 @@ import paint.backend.model.Figure;
 import paint.backend.model.Point;
 
 public class ElipseButton extends FigureButton{
+    public ElipseButton(String name){super(name);}
     @Override
     public Figure drawFigure(Point startPoint, Point endPoint) {
         Point centerPoint = new Point(Math.abs(endPoint.getX() + startPoint.getX()) / 2, (Math.abs((endPoint.getY() + startPoint.getY())) / 2));

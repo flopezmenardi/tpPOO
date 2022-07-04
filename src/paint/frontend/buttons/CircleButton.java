@@ -5,6 +5,10 @@ import paint.backend.model.Figure;
 import paint.backend.model.Point;
 
 public class CircleButton extends FigureButton{
+    public CircleButton(String name) {
+        super(name);
+    }
+
     @Override
     public Figure drawFigure(Point startPoint, Point endPoint) {
         double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
