@@ -1,5 +1,7 @@
 package paint.backend.model;
 
+import javafx.scene.canvas.GraphicsContext;
+
 public class Rectangle extends Figure {
 
     protected final Point topLeft, bottomRight;
@@ -7,6 +9,27 @@ public class Rectangle extends Figure {
     public Rectangle(Point topLeft, Point bottomRight) {
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
+    }
+
+    @Override
+    public void move(double diffX, double diffY){
+        topLeft.movePoint(diffX, diffY);
+        bottomRight.movePoint(diffX, diffY);
+    }
+    @Override
+    public void fill(GraphicsContext gc){
+        gc.fillRect(topLeft.getX(), topLeft.getY(),
+                Math.abs(topLeft.getX() - bottomRight.getX()), Math.abs(topLeft.getY() - bottomRight.getY()));
+    }
+    @Override
+    public void stroke(GraphicsContext gc){
+        gc.strokeRect(topLeft.getX(), topLeft.getY(),
+                Math.abs(topLeft.getX() - bottomRight.getX()), Math.abs(topLeft.getY() - bottomRight.getY()));
+    }
+    @Override
+    public boolean figureBelongs(Point eventPoint){
+        return eventPoint.getX() > topLeft.getX() && eventPoint.getX() < bottomRight.getX() &&
+                eventPoint.getY() > topLeft.getY() && eventPoint.getY() < bottomRight.getY();
     }
 
     @Override

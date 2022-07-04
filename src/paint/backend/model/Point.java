@@ -16,17 +16,14 @@ public class Point {
     public double getY() {
         return y;
     }
-    public void setX(double diff){
-        x += diff;
-    }
-    public void setY(double diff){
-        y += diff;
-    }
 
     public void movePoint(double diffX, double diffY){
-        setX(diffX);
-        setY(diffY);
+        x += diffX;
+        y += diffY;
     }
+//    public double distanceTo(Point o){
+//        return
+//    }
     @Override
     public String toString() {
         return String.format("{%.2f , %.2f}", x, y);

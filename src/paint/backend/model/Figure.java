@@ -1,5 +1,6 @@
 package paint.backend.model;
 
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public abstract class Figure {
@@ -23,6 +24,12 @@ public abstract class Figure {
     public void setBorderColor(Color color){
         borderColor = color;
     }
+
+    public abstract void move(double diffX, double diffY);
+    public abstract void fill(GraphicsContext gc);
+    public abstract void stroke(GraphicsContext gc);
+    public abstract boolean figureBelongs(Point eventPoint);
+
     public void enlarge(){
         resize(10);
     }
