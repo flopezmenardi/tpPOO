@@ -13,8 +13,8 @@ public class Rectangle extends Figure {
 
     @Override
     public void move(double diffX, double diffY){
-        topLeft.movePoint(diffX, diffY);
-        bottomRight.movePoint(diffX, diffY);
+        topLeft.move(diffX, diffY);
+        bottomRight.move(diffX, diffY);
     }
     @Override
     public void fill(GraphicsContext gc){

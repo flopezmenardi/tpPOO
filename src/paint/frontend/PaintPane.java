@@ -2,7 +2,6 @@ package paint.frontend;
 
 import javafx.scene.control.*;
 import paint.backend.CanvasState;
-import paint.backend.model.*;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
@@ -10,6 +9,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import paint.backend.model.Figure;
+import paint.backend.model.Point;
+import paint.frontend.FrontendFigures.FrontFigure;
 import paint.frontend.buttons.*;
 
 public class PaintPane extends BorderPane {
@@ -30,8 +32,8 @@ public class PaintPane extends BorderPane {
 	private final FigureButton squareButton = new SquareButton("Cuadrado");
 	private final FigureButton ellipseButton = new ElipseButton("Elipse");
 	private final ToggleButton deleteButton = new ToggleButton("Borrar");
-	private final ToggleButton resizeButton = new ToggleButton("resize");
-
+	private final Button enlargeButton = new Button("Agrandar");
+	private final Button reduceButton = new Button("Achicar");
 	// Dibujar una figura
 	private Point startPoint;
 
