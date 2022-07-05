@@ -1,13 +1,12 @@
 package paint.frontend;
 
+import javafx.scene.control.*;
 import paint.backend.CanvasState;
 import paint.backend.model.*;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -59,6 +58,7 @@ public class PaintPane extends BorderPane {
 		}
 		VBox buttonsBox = new VBox(10);
 		buttonsBox.getChildren().addAll(toolsArr);
+		buttonsBox.getChildren().addAll(buttonsArr);
 		buttonsBox.setPadding(new Insets(5));
 		buttonsBox.setStyle("-fx-background-color: #999999");
 		buttonsBox.setPrefWidth(100);
@@ -127,6 +127,22 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
+
+		enlargeButton.setOnAction(event -> {
+			//A la selected figure (si es distinta de null) llamamos al metodo enlarge
+			if (selectedFigure != null){
+				selectedFigure.enlarge();
+				redrawCanvas();
+			}
+		});
+
+		reduceButton.setOnAction(event -> {
+			//A la selected figure (si es distinta de null) llamamos al metodo enlarge
+			if (selectedFigure != null){
+				selectedFigure.reduce();
+				redrawCanvas();
+			}
+		});
 
 
 		canvas.setOnMouseDragged(event -> {
