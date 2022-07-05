@@ -1,6 +1,6 @@
 package paint.backend.model;
 
-public class Point {
+public class Point implements Movable{
 
     private double x, y;
 
@@ -17,7 +17,8 @@ public class Point {
         return y;
     }
 
-    public void movePoint(double diffX, double diffY){
+    @Override
+    public void move(double diffX, double diffY){
         x += diffX;
         y += diffY;
     }

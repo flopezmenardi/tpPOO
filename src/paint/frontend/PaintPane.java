@@ -38,7 +38,6 @@ public class PaintPane extends BorderPane {
 
 	// Seleccionar una figura
 	private Figure selectedFigure;
-
 	// StatusBar
 	private StatusPane statusPane;
 
@@ -51,6 +50,12 @@ public class PaintPane extends BorderPane {
 			tool.setMinWidth(90);
 			tool.setToggleGroup(tools);
 			tool.setCursor(Cursor.HAND);
+		}
+		//hicimos los siguientes botones del tipo Button y no ToggleButton asi no quedan apretados
+		Button[] buttonsArr = {enlargeButton, reduceButton};
+		for(Button b : buttonsArr){
+			b.setMinWidth(90);
+			b.setCursor(Cursor.HAND);
 		}
 		VBox buttonsBox = new VBox(10);
 		buttonsBox.getChildren().addAll(toolsArr);

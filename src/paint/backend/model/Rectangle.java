@@ -36,8 +36,11 @@ public class Rectangle extends Figure {
     public void resize(double percentage){
         //centerPoint no se modifica
         double percentChange = 1 + percentage/100; //si es -10 multiplico por 0,9 si es +10 multiplico por 1,1
-        topLeft.movePoint(topLeft.getX() - topLeft.getX()*percentChange, topLeft.getY() - topLeft.getY()*percentChange);
-        bottomRight.movePoint(bottomRight.getX() - bottomRight.getX()*percentChange, bottomRight.getY() - bottomRight.getY()*percentChange);
+        //calculamos el 10% de height/width
+        double widthDifference = getWidth() * percentChange - getWidth() ;
+        double heightDifference = getHeight() * percentChange - getHeight();
+        topLeft.move(-widthDifference/2, heightDifference/2);
+        bottomRight.move(widthDifference/2, -heightDifference/2);
     }
 
     public Point getTopLeft() {
@@ -46,6 +49,13 @@ public class Rectangle extends Figure {
 
     public Point getBottomRight() {
         return bottomRight;
+    }
+
+    public double getWidth(){
+        return bottomRight.getX() - topLeft.getX();
+    }
+    public double getHeight(){
+        return topLeft.getY() - bottomRight.getY();
     }
 
     @Override

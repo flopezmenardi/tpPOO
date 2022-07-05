@@ -15,7 +15,7 @@ public class Ellipse extends Figure {
 
     @Override
     public void move(double diffX, double diffY){
-        centerPoint.movePoint(diffX, diffY);
+        centerPoint.move(diffX, diffY);
     }
     public void fill(GraphicsContext gc){
         gc.fillOval(centerPoint.getX() - (sMayorAxis / 2), centerPoint.getY() - (sMinorAxis / 2), sMayorAxis, sMinorAxis);

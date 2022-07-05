@@ -1,6 +1,5 @@
 package paint.frontend.buttons;
 
-import paint.backend.model.Circle;
 import paint.backend.model.Figure;
 import paint.backend.model.Point;
 import paint.backend.model.Rectangle;
