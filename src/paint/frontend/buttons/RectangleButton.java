@@ -3,6 +3,8 @@ package paint.frontend.buttons;
 import paint.backend.model.Figure;
 import paint.backend.model.Point;
 import paint.backend.model.Rectangle;
+import paint.frontend.FrontendFigures.FrontFigure;
+import paint.frontend.FrontendFigures.FrontRectangle;
 
 public class RectangleButton extends FigureButton{
     public RectangleButton(String name) {
@@ -10,7 +12,7 @@ public class RectangleButton extends FigureButton{
     }
 
     @Override
-    public  Figure drawFigure(Point startPoint, Point endPoint) {
-        return new Rectangle(startPoint, endPoint);
+    public FrontFigure drawFigure(Point startPoint, Point endPoint) {
+        return new FrontRectangle(startPoint, endPoint);
     }
 }

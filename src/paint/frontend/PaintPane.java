@@ -38,7 +38,7 @@ public class PaintPane extends BorderPane {
 	private Point startPoint;
 
 	// Seleccionar una figura
-	private Figure selectedFigure;
+	private FrontFigure selectedFigure;
 	// StatusBar
 	private StatusPane statusPane;
 
@@ -78,7 +78,7 @@ public class PaintPane extends BorderPane {
 			if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
 				return ;
 			}
-			Figure newFigure = null;
+			FrontFigure newFigure = null;
 			FigureButton[] myButtons = new FigureButton[]{ellipseButton,circleButton,squareButton,rectangleButton};
 			for(FigureButton b: myButtons){
 				if(b.isSelected()){
@@ -94,7 +94,7 @@ public class PaintPane extends BorderPane {
 			Point eventPoint = new Point(event.getX(), event.getY());
 			boolean found = false;
 			StringBuilder label = new StringBuilder();
-			for(Figure figure : canvasState.figures()) {
+			for(FrontFigure figure : canvasState.figures()) {
 				if(figureBelongs(figure, eventPoint)) {
 					found = true;
 					label.append(figure); //Eliminamos el to String porque no era necesario
@@ -153,7 +153,7 @@ public class PaintPane extends BorderPane {
 				double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
 				double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
 				//creamos clase abstracta en Figure llamada move entonces solo hacemos selectedFigure.move()
-				selectedFigure.move(diffX, diffY);
+				selectedFigure.getBackFigure().move(diffX, diffY);
 				redrawCanvas();
 			}
 		});
@@ -172,7 +172,7 @@ public class PaintPane extends BorderPane {
 
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		for(Figure figure : canvasState.figures()) {
+		for(FrontFigure figure : canvasState.figures()) {
 			if(figure == selectedFigure) {
 				gc.setStroke(Color.RED);
 			} else {
@@ -185,7 +185,7 @@ public class PaintPane extends BorderPane {
 		}
 	}
 
-	boolean figureBelongs(Figure figure, Point eventPoint) {
+	boolean figureBelongs(FrontFigure figure, Point eventPoint) {
 		//en vez de los ifs con instanceof, creamos metodo abstracto figureBelongs:
 		return figure.figureBelongs(eventPoint);
 	}
