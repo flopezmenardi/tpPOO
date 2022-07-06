@@ -59,8 +59,8 @@ public class Rectangle extends Figure {
     public void setHeight(double height) {
         double prevHeight = this.getHeight();
         double differenceY = height - prevHeight;
-        this.topLeft.move(0, differenceY/2);
-        this.bottomRight.move(0, -differenceY/2);
+        this.topLeft.move(0, -differenceY/2);
+        this.bottomRight.move(0, differenceY/2);
     }
 
     @Override

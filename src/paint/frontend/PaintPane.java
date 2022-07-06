@@ -1,6 +1,11 @@
 package paint.frontend;
 
 import javafx.scene.control.*;
+
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import paint.backend.CanvasState;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -14,6 +19,8 @@ import paint.backend.model.Point;
 import paint.frontend.FrontendFigures.FrontFigure;
 import paint.frontend.buttons.*;
 
+import java.util.ArrayList;
+
 public class PaintPane extends BorderPane {
 
 	// BackEnd
@@ -22,9 +29,9 @@ public class PaintPane extends BorderPane {
 	// Canvas y relacionados
 	private final Canvas canvas = new Canvas(800, 600);
 	private final GraphicsContext gc = canvas.getGraphicsContext2D();
-	private final Color lineColor = Color.BLACK;
-	private final Color fillColor = Color.YELLOW;
-	private final double borderSizeDEFAULT = 13434;
+	private  Color lineColor = Color.BLACK;
+	private  Color fillColor = Color.YELLOW;
+	private  double borderSizeDEFAULT = 13434;
 	//private final int
 
 	// Botones Barra Izquierda
@@ -72,6 +79,29 @@ public class PaintPane extends BorderPane {
 		buttonsBox.setStyle("-fx-background-color: #999999");
 		buttonsBox.setPrefWidth(100);
 		gc.setLineWidth(1);
+
+		// color pickers
+		final ColorPicker fillColorPicker = new ColorPicker();
+		fillColorPicker.setOnAction(event -> {
+			fillColor = fillColorPicker.getValue();
+			if(selectedFigure!= null) selectedFigure.setFillColor(fillColor);
+			redrawCanvas();
+		});
+		final ColorPicker lineColorPicker = new ColorPicker();
+		lineColorPicker.setOnAction(event -> {
+			lineColor = lineColorPicker.getValue();
+			if (selectedFigure != null) selectedFigure.setBorderColor(lineColor);
+			redrawCanvas();
+		});
+		Text borderText = new Text("Borde");
+		Font font = Font.font("botones", FontWeight.EXTRA_BOLD, FontPosture.ITALIC, 20);
+		borderText.setFont(font);
+		Text fillText = new Text("Relleno");
+		fillText.setFont(font);
+		buttonsBox.getChildren().add(borderText);
+		buttonsBox.getChildren().add(lineColorPicker);
+		buttonsBox.getChildren().add(fillText);
+		buttonsBox.getChildren().add(fillColorPicker);
 
 		canvas.setOnMousePressed(event -> {
 			startPoint = new Point(event.getX(), event.getY());
@@ -160,7 +190,7 @@ public class PaintPane extends BorderPane {
 				double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
 				double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
 				//creamos clase abstracta en Figure llamada move entonces solo hacemos selectedFigure.move()
-				selectedFigure.getFigure().move(diffX, diffY);
+				if(selectedFigure!=null) selectedFigure.getFigure().move(diffX, diffY);
 				redrawCanvas();
 			}
 		});
@@ -175,6 +205,8 @@ public class PaintPane extends BorderPane {
 
 		setLeft(buttonsBox);
 		setRight(canvas);
+
+
 	}
 
 	void redrawCanvas() {
@@ -183,9 +215,9 @@ public class PaintPane extends BorderPane {
 			if(figure == selectedFigure) {
 				gc.setStroke(Color.RED);
 			} else {
-				gc.setStroke(lineColor);
+				gc.setStroke(figure.getBorderColor());
 			}
-			gc.setFill(fillColor);
+			gc.setFill(figure.getFillColor());
 			//en vez de los ifs con instanceof, creamos metodos abstractos en Figure para fill y stroke:
 			figure.fill(gc);
 			figure.stroke(gc);

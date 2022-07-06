@@ -22,7 +22,7 @@ public abstract class FrontFigure implements Resize {
 
     public boolean figureBelongs(Point eventPoint){
         //aca deberiamos hacer return figure.containsPoint pero no tenemos una figura generica
-        return true;
+        return figure.containsPoint(eventPoint);
     }
     public abstract void fill(GraphicsContext gc);
     public abstract void stroke(GraphicsContext gc);
@@ -40,5 +40,18 @@ public abstract class FrontFigure implements Resize {
 
     public Figure getFigure() {
         return figure;
+    }
+    public String toString(){return figure.toString();}
+
+    public Color getFillColor() {
+        return fillColor;
+    }
+
+    public Color getBorderColor() {
+        return borderColor;
+    }
+
+    public double getBorderSize() {
+        return borderSize;
     }
 }
