@@ -1,23 +1,18 @@
-package paint.frontend.FrontendFigures;
+//package paint.frontend.FrontendFigures;
+//
+//import javafx.scene.canvas.GraphicsContext;
+//import javafx.scene.paint.Color;
+//import paint.backend.model.Circle;
+//import paint.backend.model.Ellipse;
+//import paint.backend.model.Figure;
+//import paint.backend.model.Point;
+//
+//public class FrontCircle extends FrontEllipse {
+////    private final Circle circle;
+//
+//    public FrontCircle(Figure figure, Color fillColor, Color borderColor, double borderSize, GraphicsContext gc) {
+//        super(figure, fillColor, borderColor, borderSize, gc);
+//    }
+//
+//}
 
-import paint.backend.model.Circle;
-import paint.backend.model.Ellipse;
-import paint.backend.model.Point;
-
-public class FrontCircle extends FrontEllipse {
-    private Circle circle;
-
-    public FrontCircle(Point centerPoint, double radius) {
-        super(centerPoint,2*radius,2*radius);
-    }
-
-    @Override
-    public boolean figureBelongs(Point eventPoint){
-        return Math.sqrt(Math.pow(circle.getCenterPoint().getX() - eventPoint.getX(), 2) +
-                Math.pow(circle.getCenterPoint().getY() - eventPoint.getY(), 2)) < circle.getRadius();
-    }
-
-    public String toString() {
-        return String.format("Círculo [Centro: %s, Radio: %.2f]", circle.getCenterPoint(), circle.getRadius());
-    }
-}

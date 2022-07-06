@@ -13,26 +13,51 @@ public class Ellipse extends Figure {
     }
 
     @Override
+    public double getHeight() {
+        return this.sMinorAxis;
+    }
+
+    @Override
+    public double getWidth() {
+        return this.sMayorAxis;
+    }
+
+    @Override
+    public double getX() {
+        return this.centerPoint.getX();
+    }
+
+    @Override
+    public double getY() {
+        return this.centerPoint.getY();
+    }
+
+    @Override
     public void move(double diffX, double diffY){
         centerPoint.move(diffX, diffY);
     }
 
     @Override
-    public String toString() {
-        return String.format("Elipse [Centro: %s, DMayor: %.2f, DMenor: %.2f]", centerPoint, sMayorAxis, sMinorAxis);
+    public boolean containsPoint(Point eventPoint){
+        return ((Math.pow(eventPoint.getX() - centerPoint.getX(), 2) / Math.pow(sMayorAxis, 2)) +
+                (Math.pow(eventPoint.getY() - centerPoint.getY(), 2) / Math.pow(sMinorAxis, 2))) <= 0.30;
     }
 
     public Point getCenterPoint() {
         return centerPoint;
     }
-    public double getsMayorAxis() {
-        return sMayorAxis;
+    @Override
+    public void setHeight(double height){
+        this.sMinorAxis = height;
     }
-    public double getsMinorAxis() {
-        return sMinorAxis;
+    @Override
+    public void setWidth(double width){
+        this.sMayorAxis = width;
     }
 
-    public void setMayorAxis(double newAxisValue){this.sMayorAxis = newAxisValue; }
-    public void setMinorAxis(double newAxisValue){this.sMinorAxis = newAxisValue; }
+    @Override
+    public String toString() {
+        return String.format("Elipse [Centro: %s, DMayor: %.2f, DMenor: %.2f]", this.centerPoint, this.sMayorAxis, this.sMinorAxis);
+    }
 
 }

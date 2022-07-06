@@ -24,6 +24,8 @@ public class PaintPane extends BorderPane {
 	private final GraphicsContext gc = canvas.getGraphicsContext2D();
 	private final Color lineColor = Color.BLACK;
 	private final Color fillColor = Color.YELLOW;
+	private final double borderSizeDEFAULT = 13434;
+	//private final int
 
 	// Botones Barra Izquierda
 	private final ToggleButton selectionButton = new ToggleButton("Seleccionar");
@@ -32,8 +34,13 @@ public class PaintPane extends BorderPane {
 	private final FigureButton squareButton = new SquareButton("Cuadrado");
 	private final FigureButton ellipseButton = new ElipseButton("Elipse");
 	private final ToggleButton deleteButton = new ToggleButton("Borrar");
+	//botones para agrandar/achicar en barra izquierda
 	private final Button enlargeButton = new Button("Agrandar");
 	private final Button reduceButton = new Button("Achicar");
+
+	//sliders/pickers para los colores y grosor del border y relleno
+	//private final Slider borderSize = new Slider();
+	//private final ColorPicker fillColorPicker
 	// Dibujar una figura
 	private Point startPoint;
 
@@ -82,7 +89,7 @@ public class PaintPane extends BorderPane {
 			FigureButton[] myButtons = new FigureButton[]{ellipseButton,circleButton,squareButton,rectangleButton};
 			for(FigureButton b: myButtons){
 				if(b.isSelected()){
-					newFigure = b.drawFigure(startPoint,endPoint);
+					newFigure = b.drawFigure(startPoint,endPoint, fillColor, lineColor, borderSizeDEFAULT, gc);
 					}
 			}
 			if (newFigure != null) canvasState.addFigure(newFigure);
@@ -153,7 +160,7 @@ public class PaintPane extends BorderPane {
 				double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
 				double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
 				//creamos clase abstracta en Figure llamada move entonces solo hacemos selectedFigure.move()
-				selectedFigure.getBackFigure().move(diffX, diffY);
+				selectedFigure.getFigure().move(diffX, diffY);
 				redrawCanvas();
 			}
 		});

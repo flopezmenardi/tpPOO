@@ -1,5 +1,8 @@
 package paint.frontend.buttons;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import paint.backend.model.Circle;
 import paint.backend.model.Figure;
 import paint.backend.model.Point;
 import paint.backend.model.Rectangle;
@@ -12,7 +15,8 @@ public class RectangleButton extends FigureButton{
     }
 
     @Override
-    public FrontFigure drawFigure(Point startPoint, Point endPoint) {
-        return new FrontRectangle(startPoint, endPoint);
+    public FrontFigure drawFigure(Point startPoint, Point endPoint, Color fillColor, Color borderColor, double borderSize, GraphicsContext gc) {
+        return new FrontRectangle(new Rectangle(startPoint, endPoint), fillColor, borderColor, borderSize, gc);
+
     }
 }

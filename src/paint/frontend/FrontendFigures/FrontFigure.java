@@ -3,15 +3,27 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import paint.backend.model.Figure;
 import paint.backend.model.Point;
-import paint.backend.model.Resize;
+import paint.frontend.Interfaces.Resize;
 
 public abstract class FrontFigure implements Resize {
     private Color fillColor;
     private Color borderColor;
     private double borderSize;
     private GraphicsContext gc;
+    private Figure figure;
 
-    public abstract boolean figureBelongs(Point eventPoint);
+    public FrontFigure(Figure figure, Color fillColor, Color borderColor, double borderSize, GraphicsContext gc){
+        this.borderColor = borderColor;
+        this.fillColor = fillColor;
+        this.borderSize = borderSize;
+        this.figure = figure;
+    }
+
+
+    public boolean figureBelongs(Point eventPoint){
+        //aca deberiamos hacer return figure.containsPoint pero no tenemos una figura generica
+        return true;
+    }
     public abstract void fill(GraphicsContext gc);
     public abstract void stroke(GraphicsContext gc);
     public abstract void resize(double percent);
@@ -26,5 +38,7 @@ public abstract class FrontFigure implements Resize {
         this.borderSize = borderSize;
     }
 
-    public abstract Figure getBackFigure();
+    public Figure getFigure() {
+        return figure;
+    }
 }
