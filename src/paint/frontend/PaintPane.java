@@ -1,7 +1,9 @@
 package paint.frontend;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -29,9 +31,14 @@ public class PaintPane extends BorderPane {
 	// Canvas y relacionados
 	private final Canvas canvas = new Canvas(800, 600);
 	private final GraphicsContext gc = canvas.getGraphicsContext2D();
-	private  Color lineColor = Color.BLACK;
-	private  Color fillColor = Color.YELLOW;
-	private  double borderSizeDEFAULT = 13434;
+	private Color lineColor = Color.BLACK;
+	private Color fillColor = Color.YELLOW;
+	private final int DEFAULTBORDERSIZE = 5;
+	private final int MINBORDERSIZE = 1;
+	private final int MAXBORDERSIZE = 60;
+	//por cuanto incrementará el borderSize cuando el usuario usa el slider
+	private final int INCBORDERSIZE = 1;
+
 	//private final int
 
 	// Botones Barra Izquierda
@@ -44,10 +51,13 @@ public class PaintPane extends BorderPane {
 	//botones para agrandar/achicar en barra izquierda
 	private final Button enlargeButton = new Button("Agrandar");
 	private final Button reduceButton = new Button("Achicar");
+	//botones para undo y redo:
+	private final Button undoButton = new Button("Deshacer");
+	private final Button redoButton = new Button("Rehacer");
 
 	//sliders/pickers para los colores y grosor del border y relleno
-	//private final Slider borderSize = new Slider();
-	//private final ColorPicker fillColorPicker
+	//private final Slider borderSize = new Slider(MINBORDERSIZE, MAXBORDERSIZE, INCBORDERSIZE);
+
 	// Dibujar una figura
 	private Point startPoint;
 
@@ -93,15 +103,45 @@ public class PaintPane extends BorderPane {
 			if (selectedFigure != null) selectedFigure.setBorderColor(lineColor);
 			redrawCanvas();
 		});
+
+		//slider para el grosor del borde
+		final Slider borderSize = new Slider(MINBORDERSIZE, MAXBORDERSIZE, INCBORDERSIZE);
+		borderSize.setShowTickMarks(true);
+		borderSize.setShowTickLabels(true);
+		borderSize.setOnMouseReleased(event -> {
+			if(selectedFigure != null){
+				selectedFigure.setBorderSize(borderSize.getValue());
+				redrawCanvas();
+			}
+		});
+
 		Text borderText = new Text("Borde");
 		Font font = Font.font("botones", FontWeight.EXTRA_BOLD, FontPosture.ITALIC, 20);
 		borderText.setFont(font);
 		Text fillText = new Text("Relleno");
 		fillText.setFont(font);
 		buttonsBox.getChildren().add(borderText);
-		buttonsBox.getChildren().add(lineColorPicker);
+		buttonsBox.getChildren().addAll(borderSize, lineColorPicker);
 		buttonsBox.getChildren().add(fillText);
 		buttonsBox.getChildren().add(fillColorPicker);
+
+		//Undo y Redo:
+		Button[] HbuttonsArr = {undoButton, redoButton};
+		for(Button b : HbuttonsArr){
+			b.setMinWidth(90);
+			b.setCursor(Cursor.HAND);
+		}
+
+		HBox undoBox = new HBox(10);
+		undoBox.getChildren().addAll(HbuttonsArr);
+		undoBox.setPadding(new Insets(5));
+		undoBox.setStyle("-fx-background-color: #999999");
+		undoBox.setAlignment(Pos.CENTER);
+		undoBox.setPrefWidth(100);
+		gc.setLineWidth(1);
+
+		undoButton.setOnAction(event -> {});
+		redoButton.setOnAction(event -> {});
 
 		canvas.setOnMousePressed(event -> {
 			startPoint = new Point(event.getX(), event.getY());
@@ -119,7 +159,7 @@ public class PaintPane extends BorderPane {
 			FigureButton[] myButtons = new FigureButton[]{ellipseButton,circleButton,squareButton,rectangleButton};
 			for(FigureButton b: myButtons){
 				if(b.isSelected()){
-					newFigure = b.drawFigure(startPoint,endPoint, fillColor, lineColor, borderSizeDEFAULT, gc);
+					newFigure = b.drawFigure(startPoint,endPoint, fillColor, lineColor, DEFAULTBORDERSIZE, gc);
 					}
 			}
 			if (newFigure != null) canvasState.addFigure(newFigure);
@@ -213,14 +253,20 @@ public class PaintPane extends BorderPane {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for(FrontFigure figure : canvasState.figures()) {
 			if(figure == selectedFigure) {
+				//si la figura esta seleccionada queremos que su borde sea rojo
 				gc.setStroke(Color.RED);
 			} else {
+				//si la figura no esta seleccionada, el borde es del color defualt o el seteado por el user
 				gc.setStroke(figure.getBorderColor());
 			}
+			//cambiamos el color de relleno de la figura:
 			gc.setFill(figure.getFillColor());
+			//cambiamos el grosor del border de la figura:
+			gc.setLineWidth(figure.getBorderSize());
 			//en vez de los ifs con instanceof, creamos metodos abstractos en Figure para fill y stroke:
 			figure.fill(gc);
 			figure.stroke(gc);
+
 		}
 	}
 
