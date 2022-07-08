@@ -106,6 +106,11 @@ public class PaintPane extends BorderPane {
 		});
 		final ColorPicker lineColorPicker = new ColorPicker(lineColor);
 		lineColorPicker.setOnAction(event -> {
+			if (selectedFigure != null) {
+				ChangeStatus changeStatus = new ChangeStatus(selectedFigure, ChangesStrings.BORDERCOLOR);
+				canvasState.undoPush(changeStatus);
+				undoCounter++;
+			}
 			lineColor = lineColorPicker.getValue();
 			if (selectedFigure != null) selectedFigure.setBorderColor(lineColor);
 			redrawCanvas();
@@ -218,13 +223,28 @@ public class PaintPane extends BorderPane {
 
 		enlargeButton.setOnAction(event -> {
 			//A la selected figure (si es distinta de null) llamamos al metodo enlarge
+
+//			if (selectedFigure != null) {
+//				ChangeStatus changeStatus = new ChangeStatus(selectedFigure, ChangesStrings.ENLARGE);
+//				canvasState.undoPush(changeStatus);
+//				undoCounter++;
+//			} --> No funciona y no sabemos porque
+
 			if (selectedFigure != null){
+
 				selectedFigure.enlarge();
 				redrawCanvas();
 			}
 		});
 
 		reduceButton.setOnAction(event -> {
+
+//			if (selectedFigure != null) {
+//				ChangeStatus changeStatus = new ChangeStatus(selectedFigure, ChangesStrings.REDUCE);
+//				canvasState.undoPush(changeStatus);
+//				undoCounter++;
+//			} --> No funciona
+
 			//A la selected figure (si es distinta de null) llamamos al metodo enlarge
 			if (selectedFigure != null){
 				selectedFigure.reduce();
