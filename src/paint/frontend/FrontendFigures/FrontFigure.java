@@ -6,6 +6,8 @@ import paint.backend.model.Point;
 import paint.frontend.Interfaces.Resize;
 
 public abstract class FrontFigure implements Resize {
+    public static int IDBASE = 1000;
+    private int myId;
     private Color fillColor;
     private Color borderColor;
     private double borderSize;
@@ -13,6 +15,8 @@ public abstract class FrontFigure implements Resize {
     private Figure figure;
 
     public FrontFigure(Figure figure, Color fillColor, Color borderColor, double borderSize, GraphicsContext gc){
+        myId = IDBASE;
+        IDBASE ++;
         this.borderColor = borderColor;
         this.fillColor = fillColor;
         this.borderSize = borderSize;
@@ -51,7 +55,17 @@ public abstract class FrontFigure implements Resize {
         return borderColor;
     }
 
+    public GraphicsContext getGc(){
+        return gc;
+    }
+
+    public boolean equals(FrontFigure o) {
+        return myId == o.myId ;
+    }
+    public abstract FrontFigure copyFigure();
+
     public double getBorderSize() {
         return borderSize;
     }
+
 }

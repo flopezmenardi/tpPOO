@@ -28,6 +28,11 @@ public class FrontEllipse extends FrontFigure{
         getFigure().setHeight(percentChange* getFigure().getHeight());
     }
 
+    @Override
+    public FrontFigure copyFigure(){
+        return new FrontEllipse(getFigure(), getFillColor(), getBorderColor(), getBorderSize(), getGc());
+    }
+
 //    @Override
 //    public Figure getBackFigure() {
 //        return ellipse;

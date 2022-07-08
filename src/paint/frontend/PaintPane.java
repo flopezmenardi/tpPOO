@@ -16,12 +16,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import paint.backend.model.Figure;
+import paint.backend.Statuses.ChangeStatus;
+import paint.backend.Statuses.ChangesStrings;
 import paint.backend.model.Point;
 import paint.frontend.FrontendFigures.FrontFigure;
 import paint.frontend.buttons.*;
-
-import java.util.ArrayList;
 
 public class PaintPane extends BorderPane {
 
@@ -29,6 +28,9 @@ public class PaintPane extends BorderPane {
 	private final CanvasState canvasState;
 
 	// Canvas y relacionados
+	private int undoCounter = 0;
+	//cuantas operaciones hay en las listas de undo y redo
+	private int redoCounter = 0;
 	private final Canvas canvas = new Canvas(800, 600);
 	private final GraphicsContext gc = canvas.getGraphicsContext2D();
 	private Color lineColor = Color.BLACK;
@@ -91,13 +93,18 @@ public class PaintPane extends BorderPane {
 		gc.setLineWidth(1);
 
 		// color pickers
-		final ColorPicker fillColorPicker = new ColorPicker();
+		final ColorPicker fillColorPicker = new ColorPicker(fillColor);
 		fillColorPicker.setOnAction(event -> {
+			if (selectedFigure != null) {
+				ChangeStatus changeStatus = new ChangeStatus(selectedFigure, ChangesStrings.FILLCOLOR);
+				canvasState.undoPush(changeStatus);
+				undoCounter++;
+			}
 			fillColor = fillColorPicker.getValue();
 			if(selectedFigure!= null) selectedFigure.setFillColor(fillColor);
 			redrawCanvas();
 		});
-		final ColorPicker lineColorPicker = new ColorPicker();
+		final ColorPicker lineColorPicker = new ColorPicker(lineColor);
 		lineColorPicker.setOnAction(event -> {
 			lineColor = lineColorPicker.getValue();
 			if (selectedFigure != null) selectedFigure.setBorderColor(lineColor);
@@ -140,8 +147,7 @@ public class PaintPane extends BorderPane {
 		undoBox.setPrefWidth(100);
 		gc.setLineWidth(1);
 
-		undoButton.setOnAction(event -> {});
-		redoButton.setOnAction(event -> {});
+
 
 		canvas.setOnMousePressed(event -> {
 			startPoint = new Point(event.getX(), event.getY());
@@ -160,6 +166,9 @@ public class PaintPane extends BorderPane {
 			for(FigureButton b: myButtons){
 				if(b.isSelected()){
 					newFigure = b.drawFigure(startPoint,endPoint, fillColor, lineColor, DEFAULTBORDERSIZE, gc);
+					//cada vez que se dibuja una figura queremos borrar lo que tiene el stack de redo
+					canvasState.makeRedoNull();
+					redoCounter = 0;
 					}
 			}
 			if (newFigure != null) canvasState.addFigure(newFigure);
@@ -243,14 +252,26 @@ public class PaintPane extends BorderPane {
 			}
 		});
 		undoButton.setOnAction(event->{
-			if(selectedFigure != null){
-
-
-			}
-
+			if(undoCounter == 0) return;
+			ChangeStatus status = canvasState.getUndo();
+			canvasState.deleteFigure(status.figureToReturn()); //Eliminamos comparando por codigo por lo que la copia elimina OK
+			canvasState.addFigure(status.figureToReturn()); //Agregamos la figura que seria la version anterior a la lista de friguras.
+			undoCounter -=1;
+			redoCounter +=1;
+			redrawCanvas();
 		});
 
+		redoButton.setOnAction(event ->{
+			if (redoCounter == 0) return;
+			ChangeStatus status = canvasState.getRedo();
+			canvasState.deleteFigure(status.figureToReturn()); //Eliminamos comparando por codigo por lo que la copia elimina OK
+			canvasState.addFigure(status.figureToReturn()); //Agregamos la figura que seria la version anterior a la lista de friguras.
+			undoCounter +=1;
+			redoCounter -=1;
+			redrawCanvas();
+		});
 
+//dibujar borrar cambio color de borde, cambio color de relleno
 
 		setLeft(buttonsBox);
 		setRight(canvas);

@@ -26,4 +26,9 @@ public class FrontRectangle extends FrontFigure{
         getFigure().setHeight(getFigure().getHeight() * percentChange);
         getFigure().setWidth(getFigure().getWidth() * percentChange);
     }
+
+    @Override
+    public FrontFigure copyFigure() {
+        return new FrontRectangle(getFigure(), getFillColor(), getBorderColor(), getBorderSize(), getGc());
+    }
 }
