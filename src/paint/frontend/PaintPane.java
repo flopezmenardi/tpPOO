@@ -242,10 +242,19 @@ public class PaintPane extends BorderPane {
 				redrawCanvas();
 			}
 		});
+		undoButton.setOnAction(event->{
+			if(selectedFigure != null){
+
+
+			}
+
+		});
+
+
 
 		setLeft(buttonsBox);
 		setRight(canvas);
-
+		setTop(undoBox);
 
 	}
 

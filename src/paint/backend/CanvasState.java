@@ -3,8 +3,7 @@ package paint.backend;
 import paint.backend.model.Figure;
 import paint.frontend.FrontendFigures.FrontFigure;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class CanvasState {
 
@@ -21,5 +20,8 @@ public class CanvasState {
     public Iterable<FrontFigure> figures() {
         return new ArrayList<>(list);
     }
+
+    private Stack<ChangeStatus> undoList = new Stack<>();
+    private Stack<ChangeStatus> redoList = new Stack<>();
 
 }
