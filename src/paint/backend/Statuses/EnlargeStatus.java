@@ -6,8 +6,8 @@ import paint.frontend.FrontendFigures.FrontFigure;
 
 public class EnlargeStatus extends ResizeStatus{
 
-    public EnlargeStatus(FrontFigure frontFigure, ChangesStrings type, CanvasState canvasState) {
-        super(frontFigure, type, canvasState);
+    public EnlargeStatus(FrontFigure frontFigure, CanvasState canvasState) {
+        super(frontFigure, canvasState);
     }
 
     @Override
@@ -17,7 +17,7 @@ public class EnlargeStatus extends ResizeStatus{
 
     @Override
     public void executeInverseOperation() {
-
+        getOriginalCopy().enlarge();
     }
 
     @Override
@@ -25,8 +25,4 @@ public class EnlargeStatus extends ResizeStatus{
         return String.format("Agrandar %s", getOriginalCopy().getFigure().getFigureShape());
     }
 
-    @Override
-    public ChangeStatus inverseStatus(Color color) {
-        return null;
-    }
 }

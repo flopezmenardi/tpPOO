@@ -27,11 +27,7 @@ public class CanvasState {
     private Stack<ChangeStatus> undoStack = new Stack<>();
     private Stack<ChangeStatus> redoStack = new Stack<>();
     
-    private ChangeStatus stackOperation(Stack<ChangeStatus> undo, Stack<ChangeStatus> redo){
-        ChangeStatus aux = undo.pop();
-        redo.push(aux);
-        return aux;
-    }
+
 
     public void redoPush(ChangeStatus status){
         redoStack.push(status);
@@ -46,7 +42,7 @@ public class CanvasState {
         if(undoStack.isEmpty())
             throw new NothingToUndoException();
         ChangeStatus aux =undoStack.pop();
-//        redoStack.push(aux);
+        redoStack.push(aux);
         return aux;
     }
 
@@ -76,6 +72,12 @@ public class CanvasState {
         if(undoStack.empty())
             return "";
         return undoStack.peek().toString();
+    }
+
+    public String getRedoOperationString(){
+        if(redoStack.isEmpty())
+            return "";
+        return redoStack.peek().toString();
     }
 
 }

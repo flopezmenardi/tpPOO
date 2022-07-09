@@ -5,8 +5,8 @@ import paint.frontend.FrontendFigures.FrontFigure;
 
 public abstract class ResizeStatus extends ChangeStatus {
 
-    public ResizeStatus(FrontFigure frontFigure, ChangesStrings type, CanvasState canvasState) {
-        super(frontFigure, type, canvasState);
+    public ResizeStatus(FrontFigure frontFigure, CanvasState canvasState) {
+        super(frontFigure, canvasState);
     }
 
 

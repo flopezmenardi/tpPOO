@@ -6,8 +6,8 @@ import paint.frontend.FrontendFigures.FrontFigure;
 
 public class AddStatus extends ChangeStatus{
 
-    public AddStatus(FrontFigure frontFigure, ChangesStrings type, CanvasState canvasState){
-        super(frontFigure, type, canvasState);
+    public AddStatus(FrontFigure frontFigure, CanvasState canvasState){
+        super(frontFigure, canvasState);
     }
 
     @Override
@@ -17,7 +17,7 @@ public class AddStatus extends ChangeStatus{
 
     @Override
     public void executeInverseOperation() {
-
+    getCanvasState().addFigure(getOriginalCopy());
     }
 
     @Override
@@ -25,8 +25,4 @@ public class AddStatus extends ChangeStatus{
         return String.format("Agregar el %s", getOriginalCopy().getFigure().getFigureShape());
     }
 
-    @Override
-    public ChangeStatus inverseStatus(Color color) {
-        return null;
-    }
 }

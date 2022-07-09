@@ -5,8 +5,8 @@ import paint.backend.CanvasState;
 import paint.frontend.FrontendFigures.FrontFigure;
 
 public class ReduceStatus extends ResizeStatus{
-    public ReduceStatus(FrontFigure frontFigure, ChangesStrings type, CanvasState canvasState) {
-        super(frontFigure, type, canvasState);
+    public ReduceStatus(FrontFigure frontFigure, CanvasState canvasState) {
+        super(frontFigure, canvasState);
     }
 
     @Override
@@ -16,7 +16,7 @@ public class ReduceStatus extends ResizeStatus{
 
     @Override
     public void executeInverseOperation() {
-
+        getOriginalCopy().reduce();
     }
 
     @Override
@@ -24,8 +24,5 @@ public class ReduceStatus extends ResizeStatus{
         return String.format("Achicar %s", getOriginalCopy().getFigure().getFigureShape());
     }
 
-    @Override
-    public ChangeStatus inverseStatus(Color color) {
-        return null;
-    }
+
 }

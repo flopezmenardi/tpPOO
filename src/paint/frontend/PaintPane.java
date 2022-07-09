@@ -16,6 +16,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import paint.backend.Exceptions.NoSelectedFigureException;
 import paint.backend.Exceptions.NothingToRedoException;
 import paint.backend.Exceptions.NothingToUndoException;
 import paint.backend.Statuses.*;
@@ -67,11 +68,12 @@ public class PaintPane extends BorderPane {
 	// Seleccionar una figura
 	private FrontFigure selectedFigure;
 	// StatusBar
-	private StatusPane statusPane;
+	private final StatusPane statusPane;
 
 	private Label undoCounterText;
 	private Label redoCounterText;
 	private Label undoOperationText;
+	private Label redoOperationText;
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
@@ -100,30 +102,42 @@ public class PaintPane extends BorderPane {
 		// color pickers
 		final ColorPicker fillColorPicker = new ColorPicker(fillColor);
 		fillColorPicker.setOnAction(event -> {
-			if (selectedFigure != null) {
-				ChangeStatus changeStatus = new FillColorStatus(selectedFigure, ChangesStrings.FILLCOLOR, canvasState, selectedFigure.getFillColor(),fillColorPicker.getValue());
+			try {
+				selectedFigureExists();
+				ChangeStatus changeStatus = new FillColorStatus(selectedFigure, canvasState, selectedFigure.getFillColor(),fillColorPicker.getValue());
 				canvasState.undoPush(changeStatus);
 
 				undoOperationText.setText(canvasState.getUndoOperationString());
+				// !! aca
+				redoOperationText.setText(canvasState.getRedoOperationString());
 				undoCounter++;
 				undoCounterText.setText(String.format("%d", undoCounter));
+				fillColor = fillColorPicker.getValue();
+				selectedFigure.setFillColor(fillColor);
+				redrawCanvas();
+			}catch(NoSelectedFigureException ex){
+				System.out.println(ex.getMessage());
 			}
-			fillColor = fillColorPicker.getValue();
-			if(selectedFigure!= null) selectedFigure.setFillColor(fillColor);
-			redrawCanvas();
+			
 		});
 		final ColorPicker lineColorPicker = new ColorPicker(lineColor);
 		lineColorPicker.setOnAction(event -> {
-			if (selectedFigure != null) {
-				ChangeStatus changeStatus = new BorderColorStatus(selectedFigure, ChangesStrings.BORDERCOLOR, canvasState, selectedFigure.getBorderColor());
+			try {
+				selectedFigureExists();
+				ChangeStatus changeStatus = new BorderColorStatus(selectedFigure, canvasState, selectedFigure.getBorderColor(), lineColorPicker.getValue());
 				canvasState.undoPush(changeStatus);
 				undoOperationText.setText(canvasState.getUndoOperationString());
+				redoOperationText.setText(canvasState.getRedoOperationString());
+				// !! aca
 				undoCounter++;
 				undoCounterText.setText(String.format("%d", undoCounter));
+				lineColor = lineColorPicker.getValue();
+				selectedFigure.setBorderColor(lineColor);
+				redrawCanvas();
+			}catch(NoSelectedFigureException ex){
+				System.out.println(ex.getMessage());
 			}
-			lineColor = lineColorPicker.getValue();
-			if (selectedFigure != null) selectedFigure.setBorderColor(lineColor);
-			redrawCanvas();
+			
 		});
 
 		//slider para el grosor del borde
@@ -131,9 +145,12 @@ public class PaintPane extends BorderPane {
 		borderSize.setShowTickMarks(true);
 		borderSize.setShowTickLabels(true);
 		borderSize.setOnMouseReleased(event -> {
-			if(selectedFigure != null){
+			try{
+				selectedFigureExists();
 				selectedFigure.setBorderSize(borderSize.getValue());
 				redrawCanvas();
+			}catch(NoSelectedFigureException ex){
+				System.out.println(ex.getMessage());
 			}
 		});
 
@@ -157,15 +174,28 @@ public class PaintPane extends BorderPane {
 		undoCounterText = new Label("");
 		redoCounterText = new Label("");
 		undoOperationText = new Label("");
-		undoOperationText.setAlignment(Pos.CENTER_LEFT);
+		redoOperationText = new Label("");
+		//posicionamiento de estas labels
+		undoOperationText.setMinWidth(300);
+		undoOperationText.setAlignment(Pos.CENTER_RIGHT);
+		undoCounterText.setMinWidth(30);
+		undoCounterText.setAlignment(Pos.CENTER);
+
+		redoOperationText.setMinWidth(300);
+		redoOperationText.setAlignment(Pos.CENTER_LEFT);
+		redoCounterText.setMinWidth(30);
+		redoCounterText.setAlignment(Pos.CENTER);
+		
+		//valores iniciales
 		undoOperationText.setText(canvasState.getUndoOperationString());
+		redoOperationText.setText(canvasState.getRedoOperationString());
 		undoCounterText.setText("0");
 		redoCounterText.setText("0");
 
 		HBox undoBox = new HBox(10);
 		undoBox.getChildren().addAll(undoOperationText, undoCounterText);
 		undoBox.getChildren().addAll(HbuttonsArr);
-		undoBox.getChildren().add(redoCounterText);
+		undoBox.getChildren().addAll(redoCounterText, redoOperationText);
 		undoBox.setPadding(new Insets(5));
 		undoBox.setStyle("-fx-background-color: #999999");
 		undoBox.setAlignment(Pos.CENTER);
@@ -195,12 +225,13 @@ public class PaintPane extends BorderPane {
 					canvasState.makeRedoNull();
 					redoCounter = 0;
 					redoCounterText.setText(String.format("%d", redoCounter));
+					redoOperationText.setText("");
 					}
 			}
 			if (newFigure != null) {
 				canvasState.addFigure(newFigure);
 				undoCounter +=1;
-				AddStatus aux = new AddStatus(newFigure,ChangesStrings.ADD,canvasState);
+				AddStatus aux = new AddStatus(newFigure,canvasState);
 				canvasState.undoPush(aux);
 				undoOperationText.setText(canvasState.getUndoOperationString());
 				undoCounterText.setText(String.format("%d", undoCounter));
@@ -251,29 +282,35 @@ public class PaintPane extends BorderPane {
 
 		enlargeButton.setOnAction(event -> {
 			//A la selected figure (si es distinta de null) llamamos al metodo enlarge
-
-			if (selectedFigure != null) {
-				ChangeStatus changeStatus = new EnlargeStatus(selectedFigure,ChangesStrings.ENLARGE,canvasState);
+			
+			try {
+				selectedFigureExists();
+				ChangeStatus changeStatus = new EnlargeStatus(selectedFigure,canvasState);
 				canvasState.undoPush(changeStatus);
 				undoOperationText.setText(canvasState.getUndoOperationString());
 				undoCounter+=1;
 				undoCounterText.setText(String.format("%d", undoCounter));
 				selectedFigure.enlarge();
 				redrawCanvas();
+			}catch(NoSelectedFigureException ex){
+				System.out.println(ex.getMessage());
 			}
 		});
 
 		reduceButton.setOnAction(event -> {
 
 			//A la selected figure (si es distinta de null) llamamos al metodo reduce
-			if (selectedFigure != null) {
-				ChangeStatus changeStatus = new ReduceStatus(selectedFigure, ChangesStrings.REDUCE, canvasState);
+			try {
+				selectedFigureExists();
+				ChangeStatus changeStatus = new ReduceStatus(selectedFigure, canvasState);
 				canvasState.undoPush(changeStatus);
 				undoOperationText.setText(canvasState.getUndoOperationString());
 				undoCounter++;
 				undoCounterText.setText(String.format("%d", undoCounter));
 				selectedFigure.reduce();
 				redrawCanvas();
+			}catch(NoSelectedFigureException ex){
+				System.out.println(ex.getMessage());
 			}
 		});
 
@@ -290,8 +327,9 @@ public class PaintPane extends BorderPane {
 		});
 
 		deleteButton.setOnAction(event -> {
-			if (selectedFigure != null) {
-				ChangeStatus aux = new DeleteStatus(selectedFigure,ChangesStrings.DELETE,canvasState);
+			try {
+				selectedFigureExists();
+				ChangeStatus aux = new DeleteStatus(selectedFigure,canvasState);
 				canvasState.undoPush(aux);
 				undoOperationText.setText(canvasState.getUndoOperationString());
 				undoCounter++;
@@ -299,6 +337,8 @@ public class PaintPane extends BorderPane {
 				canvasState.deleteFigure(selectedFigure);
 				selectedFigure = null;
 				redrawCanvas();
+			}catch (NoSelectedFigureException ex){
+				System.out.println(ex.getMessage());
 			}
 		});
 
@@ -308,8 +348,7 @@ public class PaintPane extends BorderPane {
 				ChangeStatus status = canvasState.getUndo();
 
 			undoOperationText.setText(canvasState.getUndoOperationString());
-//			canvasState.deleteFigure(status.figureToDelete()); //Eliminamos comparando por codigo por lo que la copia elimina OK
-//			canvasState.addFigure(status.figureToAdd()); //Agregamos la figura que seria la version anterior a la lista de friguras.
+			redoOperationText.setText(canvasState.getRedoOperationString()); // !! aca
 			status.executeOperation();
 			undoCounter -=1;
 			redoCounter +=1;
@@ -318,6 +357,11 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 			}catch(NothingToUndoException ex){
 				System.out.println(ex.getMessage());
+				Alert alert = new Alert(Alert.AlertType.INFORMATION);
+				alert.setTitle("Undo Error");
+				alert.setHeaderText("");
+				alert.setContentText("There is nothing to undo");
+				alert.showAndWait(); //codigo no sigue hasta q user cierra este popup
 			}
 		});
 
@@ -325,8 +369,8 @@ public class PaintPane extends BorderPane {
 			try {
 				ChangeStatus status = canvasState.getRedo();
 				status.executeInverseOperation();
-//			canvasState.deleteFigure(status.figureToDelete()); //Eliminamos comparando por codigo por lo que la copia elimina Ok
-//			canvasState.addFigure(status.figureToAdd()); //Agregamos la figura que seria la version anterior a la lista de friguras.
+				undoOperationText.setText(canvasState.getUndoOperationString()); // !! aca
+				redoOperationText.setText(canvasState.getRedoOperationString());
 				undoCounter += 1;
 				redoCounter -= 1;
 				undoCounterText.setText(String.format("%d", undoCounter));
@@ -334,6 +378,11 @@ public class PaintPane extends BorderPane {
 				redrawCanvas();
 			}catch(NothingToRedoException ex){
 				System.out.println(ex.getMessage());
+				Alert alert = new Alert(Alert.AlertType.INFORMATION);
+				alert.setTitle("Redo Error");
+				alert.setHeaderText("");
+				alert.setContentText("There is nothing to redo");
+				alert.showAndWait(); //codigo no sigue hasta q user cierra este popup
 			}
 		});
 
@@ -369,6 +418,11 @@ public class PaintPane extends BorderPane {
 	boolean figureBelongs(FrontFigure figure, Point eventPoint) {
 		//en vez de los ifs con instanceof, creamos metodo abstracto figureBelongs:
 		return figure.figureBelongs(eventPoint);
+	}
+	private void selectedFigureExists() throws NoSelectedFigureException{
+		//tira una exception si no hay una figura seleccionada
+		if(selectedFigure == null)
+			throw new NoSelectedFigureException();
 	}
 
 }

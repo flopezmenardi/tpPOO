@@ -6,8 +6,8 @@ import paint.frontend.FrontendFigures.FrontFigure;
 import paint.frontend.FrontendFigures.FrontRectangle;
 
 public class DeleteStatus extends ChangeStatus{
-    public DeleteStatus(FrontFigure frontFigure, ChangesStrings type, CanvasState canvasState) {
-        super(frontFigure, type,canvasState);
+    public DeleteStatus(FrontFigure frontFigure, CanvasState canvasState) {
+        super(frontFigure,canvasState);
     }
 
     @Override
@@ -17,22 +17,12 @@ public class DeleteStatus extends ChangeStatus{
 
     @Override
     public void executeInverseOperation() {
-
+        getCanvasState().deleteFigure(getOriginalCopy());
     }
 
     @Override
     public String toString(){
         return String.format("Borrar el %s", getOriginalCopy().getFigure().getFigureShape());
-    }
-
-    @Override
-    public ChangeStatus inverseStatus(Color color) {
-        return null;
-    }
-
-    @Override
-    public FrontFigure figureToAdd() {
-        return null;
     }
 
 }
