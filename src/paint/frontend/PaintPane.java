@@ -101,7 +101,6 @@ public class PaintPane extends BorderPane {
 		fillColorPicker.setOnAction(event -> {
 			if (selectedFigure != null) {
 				ChangeStatus changeStatus = new ChangeStatus(selectedFigure, ChangesStrings.FILLCOLOR);
-				changeStatus.figureToAdd().setID(selectedFigure.getID());
 				canvasState.undoPush(changeStatus);
 				undoOperationText.setText(canvasState.getUndoOperationString());
 				undoCounter++;
@@ -115,7 +114,6 @@ public class PaintPane extends BorderPane {
 		lineColorPicker.setOnAction(event -> {
 			if (selectedFigure != null) {
 				ChangeStatus changeStatus = new ChangeStatus(selectedFigure, ChangesStrings.BORDERCOLOR);
-				changeStatus.figureToAdd().setID(selectedFigure.getID());
 				canvasState.undoPush(changeStatus);
 				undoOperationText.setText(canvasState.getUndoOperationString());
 				undoCounter++;
@@ -200,7 +198,6 @@ public class PaintPane extends BorderPane {
 				canvasState.addFigure(newFigure);
 				undoCounter +=1;
 				ChangeStatus aux = new ChangeStatus(newFigure,ChangesStrings.ADD);
-				aux.figureToAdd().setID(0);
 				canvasState.undoPush(aux);
 				undoOperationText.setText(canvasState.getUndoOperationString());
 				undoCounterText.setText(String.format("%d", undoCounter));
@@ -254,10 +251,9 @@ public class PaintPane extends BorderPane {
 
 			if (selectedFigure != null) {
 				ChangeStatus changeStatus = new ChangeStatus(selectedFigure,ChangesStrings.ENLARGE);
-				changeStatus.figureToAdd().setID(selectedFigure.getID());
 				canvasState.undoPush(changeStatus);
 				undoOperationText.setText(canvasState.getUndoOperationString());
-				undoCounter++;
+				undoCounter+=1;
 				undoCounterText.setText(String.format("%d", undoCounter));
 
 				selectedFigure.enlarge();
@@ -270,7 +266,6 @@ public class PaintPane extends BorderPane {
 			//A la selected figure (si es distinta de null) llamamos al metodo reduce
 			if (selectedFigure != null) {
 				ChangeStatus changeStatus = new ChangeStatus(selectedFigure, ChangesStrings.REDUCE);
-				changeStatus.figureToAdd().setID(selectedFigure.getID());
 				canvasState.undoPush(changeStatus);
 				undoOperationText.setText(canvasState.getUndoOperationString());
 				undoCounter++;
@@ -295,7 +290,6 @@ public class PaintPane extends BorderPane {
 		deleteButton.setOnAction(event -> {
 			if (selectedFigure != null) {
 				ChangeStatus aux = new ChangeStatus(selectedFigure,ChangesStrings.DELETE);
-				aux.figureToAdd().setID(selectedFigure.getID());
 				canvasState.undoPush(aux);
 				undoOperationText.setText(canvasState.getUndoOperationString());
 				undoCounter++;
@@ -311,7 +305,7 @@ public class PaintPane extends BorderPane {
 			ChangeStatus status = canvasState.getUndo();
 			undoOperationText.setText(canvasState.getUndoOperationString());
 			canvasState.deleteFigure(status.figureToDelete()); //Eliminamos comparando por codigo por lo que la copia elimina OK
-			canvasState.addFigure(status.figureToAdd()); //Agregamos la figura que seria la version anterior a la lista de friguras.
+			/*if(redoCounter != 0) es alto parche que sirve, pero no tanto. me parece que vamos a tener que hacer clases. */ canvasState.addFigure(status.figureToAdd()); //Agregamos la figura que seria la version anterior a la lista de friguras.
 			undoCounter -=1;
 			redoCounter +=1;
 			undoCounterText.setText(String.format("%d", undoCounter));
@@ -323,7 +317,7 @@ public class PaintPane extends BorderPane {
 			if (redoCounter == 0) return;
 			ChangeStatus status = canvasState.getRedo();
 			canvasState.deleteFigure(status.figureToDelete()); //Eliminamos comparando por codigo por lo que la copia elimina OK
-			canvasState.addFigure(status.figureToAdd()); //Agregamos la figura que seria la version anterior a la lista de friguras.
+			 canvasState.addFigure(status.figureToAdd()); //Agregamos la figura que seria la version anterior a la lista de friguras.
 			undoCounter +=1;
 			redoCounter -=1;
 			undoCounterText.setText(String.format("%d", undoCounter));

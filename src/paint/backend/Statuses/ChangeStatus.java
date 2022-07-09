@@ -10,6 +10,7 @@ public class ChangeStatus {
     public ChangeStatus(FrontFigure frontFigure, ChangesStrings type) {
         originalCopy = frontFigure;
         copy = frontFigure.copyFigure();
+        copy.setID(originalCopy.getID());
         this.type = type;
     }
 

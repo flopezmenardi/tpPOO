@@ -3,14 +3,23 @@ package paint.backend.model;
 
 public class Ellipse extends Figure {
 
-    protected final Point centerPoint;
-    protected double sMayorAxis, sMinorAxis;
+    private final Point centerPoint;
+    private double sMayorAxis, sMinorAxis;
 
     public Ellipse(Point centerPoint, double sMayorAxis, double sMinorAxis) {
         this.centerPoint = centerPoint;
         this.sMayorAxis = sMayorAxis;
         this.sMinorAxis = sMinorAxis;
     }
+
+    protected double getsMayorAxis() {
+        return sMayorAxis;
+    }
+
+    protected double getsMinorAxis() {
+        return sMinorAxis;
+    }
+    protected Point getCenterPoint(){return centerPoint;}
 
     @Override
     public double getHeight() {
@@ -43,9 +52,6 @@ public class Ellipse extends Figure {
                 (Math.pow(eventPoint.getY() - centerPoint.getY(), 2) / Math.pow(sMinorAxis, 2))) <= 0.30;
     }
 
-    public Point getCenterPoint() {
-        return centerPoint;
-    }
     @Override
     public void setHeight(double height){
         this.sMinorAxis = height;

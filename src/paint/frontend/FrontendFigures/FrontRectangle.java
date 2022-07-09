@@ -6,6 +6,9 @@ import paint.backend.model.Figure;
 import paint.backend.model.Point;
 import paint.backend.model.Rectangle;
 
+
+
+
 public class FrontRectangle extends FrontFigure{
     public FrontRectangle(Figure fig, Color fillColor, Color borderColor, double borderSize, GraphicsContext gc){
         super(fig,fillColor,borderColor,borderSize,gc);

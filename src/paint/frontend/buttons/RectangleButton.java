@@ -2,7 +2,6 @@ package paint.frontend.buttons;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import paint.backend.model.Circle;
 import paint.backend.model.Figure;
 import paint.backend.model.Point;
 import paint.backend.model.Rectangle;

@@ -44,8 +44,11 @@ public class CanvasState {
         redoStack.push(aux);
         return aux;
     }
+
     public ChangeStatus getRedo(){
-       return stackOperation(redoStack, undoStack);
+      ChangeStatus aux = redoStack.pop();
+      undoStack.push(aux);
+      return aux;
     }
 
     public void makeRedoNull() {
