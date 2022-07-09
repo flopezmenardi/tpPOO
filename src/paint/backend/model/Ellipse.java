@@ -66,10 +66,8 @@ public class Ellipse extends Figure {
         return String.format("Ellipse [Centro: %s, DMayor: %.2f, DMenor: %.2f]", this.centerPoint, this.sMayorAxis, this.sMinorAxis);
     }
 
-    @Override
-    public Figure copyBackFigure() {
-        return new Ellipse(centerPoint,sMayorAxis,sMinorAxis);
-    }
+
+
 
     @Override
     public String getFigureShape(){

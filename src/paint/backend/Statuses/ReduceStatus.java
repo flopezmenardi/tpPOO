@@ -9,19 +9,21 @@ public class ReduceStatus extends ResizeStatus{
         super(frontFigure, canvasState);
     }
 
+    // el undo de haber achicado una Figure es volver a agrandarla.
     @Override
     public void executeOperation() {
-        getOriginalCopy().enlarge();
+        getFigure().enlarge();
     }
 
+    // el redo seria volver a achicar la figura que se habia agrandado por el undo.
     @Override
     public void executeInverseOperation() {
-        getOriginalCopy().reduce();
+        getFigure().reduce();
     }
 
     @Override
     public String toString(){
-        return String.format("Achicar %s", getOriginalCopy().getFigure().getFigureShape());
+        return String.format("Achicar %s", getFigure().getFigure().getFigureShape());
     }
 
 

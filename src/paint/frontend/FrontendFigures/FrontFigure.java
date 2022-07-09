@@ -5,11 +5,8 @@ import paint.backend.model.Figure;
 import paint.backend.model.Point;
 import paint.frontend.Interfaces.Resize;
 
-import java.util.Objects;
 
 public abstract class FrontFigure implements Resize {
-    public static int IDBASE = 1000;
-    private int myId;
     private Color fillColor;
     private Color borderColor;
     private double borderSize;
@@ -17,8 +14,6 @@ public abstract class FrontFigure implements Resize {
     private Figure figure;
 
     public FrontFigure(Figure figure, Color fillColor, Color borderColor, double borderSize, GraphicsContext gc){
-        myId = IDBASE;
-        IDBASE +=1;
         this.borderColor = borderColor;
         this.fillColor = fillColor;
         this.borderSize = borderSize;
@@ -27,7 +22,7 @@ public abstract class FrontFigure implements Resize {
 
 
     public boolean figureBelongs(Point eventPoint){
-        //aca deberiamos hacer return figure.containsPoint pero no tenemos una figura generica
+
         return figure.containsPoint(eventPoint);
     }
     public abstract void fill(GraphicsContext gc);
@@ -61,18 +56,7 @@ public abstract class FrontFigure implements Resize {
         return gc;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FrontFigure that = (FrontFigure) o;
-        return myId == that.myId;
-    }
 
-
-    public void setID(int myId){this.myId =  myId;}
-    public int getID(){return myId;}
-    public abstract FrontFigure copyFigure();
 
     public double getBorderSize() {
         return borderSize;

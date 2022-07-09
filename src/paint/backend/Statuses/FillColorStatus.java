@@ -15,24 +15,21 @@ public class FillColorStatus extends ChangeStatus{
         this.actualColor = actualColor;
     }
 
+    // el undo seria volver a setear la figura con el color anterior a ser modificado.
     @Override
     public void executeOperation() {
-        getOriginalCopy().setFillColor(this.prevColor);
-
-        // agrego al stack del redo y que no se encargue de eso el getUNDO
-
+        getFigure().setFillColor(this.prevColor);
     }
-
-
+    // el redo seria volver a poner la figuta con el color "actual",
+    // que no necesariamente es el que se muestra en pantalla.
     @Override
     public void executeInverseOperation() {
-        getOriginalCopy().setFillColor(this.actualColor);
-
+        getFigure().setFillColor(this.actualColor);
     }
 
     @Override
     public String toString(){
-        return String.format("Cambiar color de relleno de %s", getOriginalCopy().getFigure().getFigureShape());
+        return String.format("Cambiar color de relleno de %s", getFigure().getFigure().getFigureShape());
     }
 
 }

@@ -2,9 +2,8 @@ package paint.frontend.FrontendFigures;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import paint.backend.model.Ellipse;
 import paint.backend.model.Figure;
-import paint.backend.model.Point;
+
 
 public class FrontEllipse extends FrontFigure{
     //private final Ellipse ellipse;
@@ -28,8 +27,5 @@ public class FrontEllipse extends FrontFigure{
         getFigure().setHeight(percentChange* getFigure().getHeight());
     }
 
-    @Override
-    public FrontFigure copyFigure(){
-        return new FrontEllipse(getFigure().copyBackFigure(), getFillColor(), getBorderColor(), getBorderSize(), getGc());
-    }
+
 }

@@ -22,10 +22,7 @@ public class Circle extends Ellipse {
         return getsMayorAxis()/2;
     }
 
-    @Override
-    public Figure copyBackFigure(){
-        return new Circle(getCenterPoint(),getRadius());
-    }
+
 
     @Override
     public String getFigureShape(){

@@ -3,8 +3,7 @@ package paint.frontend.FrontendFigures;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import paint.backend.model.Figure;
-import paint.backend.model.Point;
-import paint.backend.model.Rectangle;
+
 
 
 
@@ -30,8 +29,5 @@ public class FrontRectangle extends FrontFigure{
         getFigure().setWidth(getFigure().getWidth() * percentChange);
     }
 
-    @Override
-    public FrontFigure copyFigure() {
-        return new FrontRectangle(getFigure().copyBackFigure(), getFillColor(), getBorderColor(), getBorderSize(), getGc());
-    }
+
 }

@@ -10,19 +10,21 @@ public class AddStatus extends ChangeStatus{
         super(frontFigure, canvasState);
     }
 
+    // el undo de add seria deleteFigure
     @Override
     public void executeOperation() {
-        getCanvasState().deleteFigure(getOriginalCopy());
+        getCanvasState().deleteFigure(getFigure());
     }
 
+    // el redo de add seria volver a agregar la figura
     @Override
     public void executeInverseOperation() {
-    getCanvasState().addFigure(getOriginalCopy());
+    getCanvasState().addFigure(getFigure());
     }
 
     @Override
     public String toString(){
-        return String.format("Agregar el %s", getOriginalCopy().getFigure().getFigureShape());
+        return String.format("Agregar el %s", getFigure().getFigure().getFigureShape());
     }
 
 }

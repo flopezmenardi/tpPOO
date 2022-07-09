@@ -70,10 +70,7 @@ public class Rectangle extends Figure {
         this.bottomRight.move(differenceX/2, 0);
     }
 
-    @Override
-    public Figure copyBackFigure(){
-        return new Rectangle(topLeft, bottomRight);
-    }
+
 
     @Override
     public String getFigureShape(){

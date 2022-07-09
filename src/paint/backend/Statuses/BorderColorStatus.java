@@ -13,21 +13,21 @@ public class BorderColorStatus extends ChangeStatus{
         this.actualColor = actualColor;
     }
 
+    // el undo de borderColor seria volver su colir al previous color.
     @Override
     public void executeOperation() {
-
-        getOriginalCopy().setBorderColor(this.prevColor);
-
+        getFigure().setBorderColor(this.prevColor);
     }
 
+    // el redo seria volver al color "actual" que no necesariamente es el actual que estamos viendo en pantalla.
     @Override
     public void executeInverseOperation() {
-        getOriginalCopy().setBorderColor(this.actualColor);
+        getFigure().setBorderColor(this.actualColor);
     }
 
     @Override
     public String toString(){
-        return String.format("Cambiar color de borde de %s", getOriginalCopy().getFigure().getFigureShape());
+        return String.format("Cambiar color de borde de %s", getFigure().getFigure().getFigureShape());
     }
 
 }

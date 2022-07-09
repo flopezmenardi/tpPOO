@@ -10,19 +10,21 @@ public class DeleteStatus extends ChangeStatus{
         super(frontFigure,canvasState);
     }
 
+    // el undo de delete seria volver a agregar la figura al canvas.
     @Override
     public void executeOperation() {
-        getCanvasState().addFigure(getOriginalCopy());
+        getCanvasState().addFigure(getFigure());
     }
 
+    // el redo seria volver a eliminar la figura del canvas.
     @Override
     public void executeInverseOperation() {
-        getCanvasState().deleteFigure(getOriginalCopy());
+        getCanvasState().deleteFigure(getFigure());
     }
 
     @Override
     public String toString(){
-        return String.format("Borrar el %s", getOriginalCopy().getFigure().getFigureShape());
+        return String.format("Borrar el %s", getFigure().getFigure().getFigureShape());
     }
 
 }

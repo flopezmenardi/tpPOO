@@ -12,10 +12,7 @@ public class Square extends Rectangle {
         return String.format("Cuadrado [ %s , %s ]", getTopLeft(), getBottomRight());
     }
 
-    @Override
-    public Figure copyBackFigure(){
-        return new Square(getTopLeft(),size);
-    }
+
 
     @Override
     public String getFigureShape(){
