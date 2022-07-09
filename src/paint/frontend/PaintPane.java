@@ -68,6 +68,10 @@ public class PaintPane extends BorderPane {
 	// StatusBar
 	private StatusPane statusPane;
 
+	private Label undoCounterText;
+	private Label redoCounterText;
+	private Label undoOperationText;
+
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
@@ -97,8 +101,11 @@ public class PaintPane extends BorderPane {
 		fillColorPicker.setOnAction(event -> {
 			if (selectedFigure != null) {
 				ChangeStatus changeStatus = new ChangeStatus(selectedFigure, ChangesStrings.FILLCOLOR);
+				changeStatus.figureToAdd().setID(selectedFigure.getID());
 				canvasState.undoPush(changeStatus);
+				undoOperationText.setText(canvasState.getUndoOperationString());
 				undoCounter++;
+				undoCounterText.setText(String.format("%d", undoCounter));
 			}
 			fillColor = fillColorPicker.getValue();
 			if(selectedFigure!= null) selectedFigure.setFillColor(fillColor);
@@ -108,8 +115,11 @@ public class PaintPane extends BorderPane {
 		lineColorPicker.setOnAction(event -> {
 			if (selectedFigure != null) {
 				ChangeStatus changeStatus = new ChangeStatus(selectedFigure, ChangesStrings.BORDERCOLOR);
+				changeStatus.figureToAdd().setID(selectedFigure.getID());
 				canvasState.undoPush(changeStatus);
+				undoOperationText.setText(canvasState.getUndoOperationString());
 				undoCounter++;
+				undoCounterText.setText(String.format("%d", undoCounter));
 			}
 			lineColor = lineColorPicker.getValue();
 			if (selectedFigure != null) selectedFigure.setBorderColor(lineColor);
@@ -143,9 +153,18 @@ public class PaintPane extends BorderPane {
 			b.setMinWidth(90);
 			b.setCursor(Cursor.HAND);
 		}
+		//textbox para los counters y el string que indica la proxima operacion del undo
+		undoCounterText = new Label("");
+		redoCounterText = new Label("");
+		undoOperationText = new Label("");
+		undoOperationText.setText(canvasState.getUndoOperationString());
+		undoCounterText.setText("0");
+		redoCounterText.setText("0");
 
 		HBox undoBox = new HBox(10);
+		undoBox.getChildren().addAll(undoOperationText, undoCounterText);
 		undoBox.getChildren().addAll(HbuttonsArr);
+		undoBox.getChildren().add(redoCounterText);
 		undoBox.setPadding(new Insets(5));
 		undoBox.setStyle("-fx-background-color: #999999");
 		undoBox.setAlignment(Pos.CENTER);
@@ -174,9 +193,18 @@ public class PaintPane extends BorderPane {
 					//cada vez que se dibuja una figura queremos borrar lo que tiene el stack de redo
 					canvasState.makeRedoNull();
 					redoCounter = 0;
+					redoCounterText.setText(String.format("%d", redoCounter));
 					}
 			}
-			if (newFigure != null) canvasState.addFigure(newFigure);
+			if (newFigure != null) {
+				canvasState.addFigure(newFigure);
+				undoCounter +=1;
+				ChangeStatus aux = new ChangeStatus(newFigure,ChangesStrings.ADD);
+				aux.figureToAdd().setID(0);
+				canvasState.undoPush(aux);
+				undoOperationText.setText(canvasState.getUndoOperationString());
+				undoCounterText.setText(String.format("%d", undoCounter));
+			}
 			startPoint = null;
 			redrawCanvas();
 		});
@@ -224,13 +252,13 @@ public class PaintPane extends BorderPane {
 		enlargeButton.setOnAction(event -> {
 			//A la selected figure (si es distinta de null) llamamos al metodo enlarge
 
-//			if (selectedFigure != null) {
-//				ChangeStatus changeStatus = new ChangeStatus(selectedFigure, ChangesStrings.ENLARGE);
-//				canvasState.undoPush(changeStatus);
-//				undoCounter++;
-//			} --> No funciona y no sabemos porque
-
-			if (selectedFigure != null){
+			if (selectedFigure != null) {
+				ChangeStatus changeStatus = new ChangeStatus(selectedFigure,ChangesStrings.ENLARGE);
+				changeStatus.figureToAdd().setID(selectedFigure.getID());
+				canvasState.undoPush(changeStatus);
+				undoOperationText.setText(canvasState.getUndoOperationString());
+				undoCounter++;
+				undoCounterText.setText(String.format("%d", undoCounter));
 
 				selectedFigure.enlarge();
 				redrawCanvas();
@@ -239,14 +267,14 @@ public class PaintPane extends BorderPane {
 
 		reduceButton.setOnAction(event -> {
 
-//			if (selectedFigure != null) {
-//				ChangeStatus changeStatus = new ChangeStatus(selectedFigure, ChangesStrings.REDUCE);
-//				canvasState.undoPush(changeStatus);
-//				undoCounter++;
-//			} --> No funciona
-
-			//A la selected figure (si es distinta de null) llamamos al metodo enlarge
-			if (selectedFigure != null){
+			//A la selected figure (si es distinta de null) llamamos al metodo reduce
+			if (selectedFigure != null) {
+				ChangeStatus changeStatus = new ChangeStatus(selectedFigure, ChangesStrings.REDUCE);
+				changeStatus.figureToAdd().setID(selectedFigure.getID());
+				canvasState.undoPush(changeStatus);
+				undoOperationText.setText(canvasState.getUndoOperationString());
+				undoCounter++;
+				undoCounterText.setText(String.format("%d", undoCounter));
 				selectedFigure.reduce();
 				redrawCanvas();
 			}
@@ -266,28 +294,40 @@ public class PaintPane extends BorderPane {
 
 		deleteButton.setOnAction(event -> {
 			if (selectedFigure != null) {
+				ChangeStatus aux = new ChangeStatus(selectedFigure,ChangesStrings.DELETE);
+				aux.figureToAdd().setID(selectedFigure.getID());
+				canvasState.undoPush(aux);
+				undoOperationText.setText(canvasState.getUndoOperationString());
+				undoCounter++;
+				undoCounterText.setText(String.format("%d", undoCounter));
 				canvasState.deleteFigure(selectedFigure);
 				selectedFigure = null;
 				redrawCanvas();
 			}
 		});
+
 		undoButton.setOnAction(event->{
 			if(undoCounter == 0) return;
 			ChangeStatus status = canvasState.getUndo();
-			canvasState.deleteFigure(status.figureToReturn()); //Eliminamos comparando por codigo por lo que la copia elimina OK
-			canvasState.addFigure(status.figureToReturn()); //Agregamos la figura que seria la version anterior a la lista de friguras.
+			undoOperationText.setText(canvasState.getUndoOperationString());
+			canvasState.deleteFigure(status.figureToDelete()); //Eliminamos comparando por codigo por lo que la copia elimina OK
+			canvasState.addFigure(status.figureToAdd()); //Agregamos la figura que seria la version anterior a la lista de friguras.
 			undoCounter -=1;
 			redoCounter +=1;
+			undoCounterText.setText(String.format("%d", undoCounter));
+			redoCounterText.setText(String.format("%d", redoCounter));
 			redrawCanvas();
 		});
 
 		redoButton.setOnAction(event ->{
 			if (redoCounter == 0) return;
 			ChangeStatus status = canvasState.getRedo();
-			canvasState.deleteFigure(status.figureToReturn()); //Eliminamos comparando por codigo por lo que la copia elimina OK
-			canvasState.addFigure(status.figureToReturn()); //Agregamos la figura que seria la version anterior a la lista de friguras.
+			canvasState.deleteFigure(status.figureToDelete()); //Eliminamos comparando por codigo por lo que la copia elimina OK
+			canvasState.addFigure(status.figureToAdd()); //Agregamos la figura que seria la version anterior a la lista de friguras.
 			undoCounter +=1;
 			redoCounter -=1;
+			undoCounterText.setText(String.format("%d", undoCounter));
+			redoCounterText.setText(String.format("%d", redoCounter));
 			redrawCanvas();
 		});
 

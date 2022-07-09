@@ -39,8 +39,10 @@ public class CanvasState {
     }
     
     public ChangeStatus getUndo(){
-        return stackOperation(undoStack, redoStack);
-    
+//        return stackOperation(undoStack, redoStack);
+        ChangeStatus aux =undoStack.pop();
+        redoStack.push(aux);
+        return aux;
     }
     public ChangeStatus getRedo(){
        return stackOperation(redoStack, undoStack);
@@ -48,6 +50,14 @@ public class CanvasState {
 
     public void makeRedoNull() {
         redoStack.clear();
+    }
+
+    public String getUndoOperationString(){
+        //quiero retornar la operacion que se hara si hago undo
+        //para esto debo hacer un peek del ultimo changeStatus en el stack de undo y acceder al string de su enum
+        if(undoStack.empty())
+            return "";
+        return undoStack.peek().getOperationString();
     }
 
 }

@@ -70,4 +70,9 @@ public class Rectangle extends Figure {
         this.topLeft.move(-differenceX/2, 0);
         this.bottomRight.move(differenceX/2, 0);
     }
+
+    @Override
+    public Figure copyBackFigure(){
+        return new Rectangle(topLeft, bottomRight);
+    }
 }

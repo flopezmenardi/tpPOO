@@ -21,4 +21,6 @@ public abstract class Figure implements Movable {
     @Override
     public abstract void move(double diffX, double diffY);
     public abstract boolean containsPoint(Point eventPoint);
+    //este metodo nos retorna una copia de la figura:
+    public abstract Figure copyBackFigure();
 }

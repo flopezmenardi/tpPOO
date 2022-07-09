@@ -5,6 +5,8 @@ import paint.backend.model.Figure;
 import paint.backend.model.Point;
 import paint.frontend.Interfaces.Resize;
 
+import java.util.Objects;
+
 public abstract class FrontFigure implements Resize {
     public static int IDBASE = 1000;
     private int myId;
@@ -16,7 +18,7 @@ public abstract class FrontFigure implements Resize {
 
     public FrontFigure(Figure figure, Color fillColor, Color borderColor, double borderSize, GraphicsContext gc){
         myId = IDBASE;
-        IDBASE ++;
+        IDBASE +=1;
         this.borderColor = borderColor;
         this.fillColor = fillColor;
         this.borderSize = borderSize;
@@ -59,9 +61,17 @@ public abstract class FrontFigure implements Resize {
         return gc;
     }
 
-    public boolean equals(FrontFigure o) {
-        return myId == o.myId ;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FrontFigure that = (FrontFigure) o;
+        return myId == that.myId;
     }
+
+
+    public void setID(int myId){this.myId =  myId;}
+    public int getID(){return myId;}
     public abstract FrontFigure copyFigure();
 
     public double getBorderSize() {

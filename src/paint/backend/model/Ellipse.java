@@ -57,7 +57,11 @@ public class Ellipse extends Figure {
 
     @Override
     public String toString() {
-        return String.format("Elipse [Centro: %s, DMayor: %.2f, DMenor: %.2f]", this.centerPoint, this.sMayorAxis, this.sMinorAxis);
+        return String.format("Ellipse [Centro: %s, DMayor: %.2f, DMenor: %.2f]", this.centerPoint, this.sMayorAxis, this.sMinorAxis);
     }
 
+    @Override
+    public Figure copyBackFigure() {
+        return new Ellipse(centerPoint,sMayorAxis,sMinorAxis);
+    }
 }

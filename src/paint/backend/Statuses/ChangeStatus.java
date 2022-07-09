@@ -4,20 +4,28 @@ package paint.backend.Statuses;
 import paint.frontend.FrontendFigures.FrontFigure;
 
 public class ChangeStatus {
-    private final FrontFigure copy;
+    private  FrontFigure copy;
+    private  FrontFigure originalCopy;
     private final ChangesStrings type;
     public ChangeStatus(FrontFigure frontFigure, ChangesStrings type) {
+        originalCopy = frontFigure;
         copy = frontFigure.copyFigure();
         this.type = type;
     }
 
     @Override
     public String toString() {
-        return null;
+        return getOperationString();
     }
 
-    public FrontFigure figureToReturn() {
+    public FrontFigure figureToAdd() {
         return copy;
     }
+    public FrontFigure figureToDelete(){return originalCopy;}
+
+    public String getOperationString(){
+        return type.getMESSAGE();
+    }
+
 
 }

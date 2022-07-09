@@ -29,6 +29,6 @@ public class FrontRectangle extends FrontFigure{
 
     @Override
     public FrontFigure copyFigure() {
-        return new FrontRectangle(getFigure(), getFillColor(), getBorderColor(), getBorderSize(), getGc());
+        return new FrontRectangle(getFigure().copyBackFigure(), getFillColor(), getBorderColor(), getBorderSize(), getGc());
     }
 }
