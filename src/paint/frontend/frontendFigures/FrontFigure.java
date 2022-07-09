@@ -1,9 +1,9 @@
-package paint.frontend.FrontendFigures;
+package paint.frontend.frontendFigures;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import paint.backend.model.Figure;
 import paint.backend.model.Point;
-import paint.frontend.Interfaces.Resize;
+import paint.frontend.interfaces.Resize;
 
 /*Una frontfigure recibe una Figure del back para guardarla, y ademas todos los datos de una figura que
 * pertenecen al front como el fillcolor, bordercolor y bordersize.

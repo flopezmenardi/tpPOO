@@ -1,4 +1,4 @@
-package paint.frontend.Interfaces;
+package paint.frontend.interfaces;
 
 public interface Resize {
     public default void enlarge(){

@@ -1,8 +1,8 @@
-package paint.backend.Statuses;
+package paint.backend.statuses;
 
 import javafx.scene.paint.Color;
 import paint.backend.CanvasState;
-import paint.frontend.FrontendFigures.FrontFigure;
+import paint.frontend.frontendFigures.FrontFigure;
 
 public class BorderColorStatus extends ChangeStatus{
     private Color prevColor;

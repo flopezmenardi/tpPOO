@@ -1,4 +1,4 @@
-package paint.frontend.FrontendFigures;
+package paint.frontend.frontendFigures;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;

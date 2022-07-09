@@ -1,10 +1,8 @@
-package paint.backend.Statuses;
+package paint.backend.statuses;
 
 
-import javafx.scene.control.TextFormatter;
-import javafx.scene.paint.Color;
 import paint.backend.CanvasState;
-import paint.frontend.FrontendFigures.FrontFigure;
+import paint.frontend.frontendFigures.FrontFigure;
 
 public abstract class ChangeStatus {
     // vamos a cuardar una

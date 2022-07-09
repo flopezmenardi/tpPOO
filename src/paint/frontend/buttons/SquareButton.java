@@ -5,8 +5,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import paint.backend.model.Point;
 import paint.backend.model.Square;
-import paint.frontend.FrontendFigures.FrontFigure;
-import paint.frontend.FrontendFigures.FrontRectangle;
+import paint.frontend.frontendFigures.FrontFigure;
+import paint.frontend.frontendFigures.FrontRectangle;
 
 public class SquareButton extends FigureButton {
 

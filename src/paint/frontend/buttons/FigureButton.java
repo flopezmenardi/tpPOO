@@ -4,7 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.paint.Color;
 import paint.backend.model.Point;
-import paint.frontend.FrontendFigures.FrontFigure;
+import paint.frontend.frontendFigures.FrontFigure;
 
 // hicimos que extienda a ToggleButton pues la idea es que los botones de figures se mantengan apetados,
 // para asi poder crear muchas figuras sin tener que tocar todo el tiempo el boton de la figura.

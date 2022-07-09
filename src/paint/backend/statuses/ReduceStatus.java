@@ -1,8 +1,7 @@
-package paint.backend.Statuses;
+package paint.backend.statuses;
 
-import javafx.scene.paint.Color;
 import paint.backend.CanvasState;
-import paint.frontend.FrontendFigures.FrontFigure;
+import paint.frontend.frontendFigures.FrontFigure;
 
 public class ReduceStatus extends ResizeStatus{
     public ReduceStatus(FrontFigure frontFigure, CanvasState canvasState) {

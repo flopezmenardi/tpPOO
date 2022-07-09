@@ -4,8 +4,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import paint.backend.model.Ellipse;
 import paint.backend.model.Point;
-import paint.frontend.FrontendFigures.FrontEllipse;
-import paint.frontend.FrontendFigures.FrontFigure;
+import paint.frontend.frontendFigures.FrontEllipse;
+import paint.frontend.frontendFigures.FrontFigure;
 
 public class ElipseButton extends FigureButton{
 

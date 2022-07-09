@@ -1,4 +1,4 @@
-package paint.backend.Exceptions;
+package paint.backend.exceptions;
 
 
 // esta exception es utilizada en los casos en los que el usuario intenta rehacer cambios cuando no hay ningun cambio.

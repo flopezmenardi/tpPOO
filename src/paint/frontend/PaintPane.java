@@ -16,12 +16,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import paint.backend.Exceptions.NoSelectedFigureException;
-import paint.backend.Exceptions.NothingToRedoException;
-import paint.backend.Exceptions.NothingToUndoException;
-import paint.backend.Statuses.*;
+import paint.backend.exceptions.NoSelectedFigureException;
+import paint.backend.exceptions.NothingToRedoException;
+import paint.backend.exceptions.NothingToUndoException;
+import paint.backend.statuses.*;
 import paint.backend.model.Point;
-import paint.frontend.FrontendFigures.FrontFigure;
+import paint.frontend.frontendFigures.FrontFigure;
 import paint.frontend.buttons.*;
 
 public class PaintPane extends BorderPane {

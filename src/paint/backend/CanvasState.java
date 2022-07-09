@@ -1,9 +1,9 @@
 package paint.backend;
 
-import paint.backend.Exceptions.NothingToRedoException;
-import paint.backend.Exceptions.NothingToUndoException;
-import paint.backend.Statuses.ChangeStatus;
-import paint.frontend.FrontendFigures.FrontFigure;
+import paint.backend.exceptions.NothingToRedoException;
+import paint.backend.exceptions.NothingToUndoException;
+import paint.backend.statuses.ChangeStatus;
+import paint.frontend.frontendFigures.FrontFigure;
 import java.util.*;
 
 public class CanvasState {
