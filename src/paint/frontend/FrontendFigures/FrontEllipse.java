@@ -6,7 +6,7 @@ import paint.backend.model.Figure;
 
 
 public class FrontEllipse extends FrontFigure{
-    //private final Ellipse ellipse;
+
     public FrontEllipse(Figure figure, Color fillColor, Color borderColor, double borderSize, GraphicsContext gc){
         super(figure, fillColor, borderColor, borderSize, gc);
 }

@@ -98,7 +98,7 @@ public class PaintPane extends BorderPane {
 		}
 
 
-		// creamos un nuevo layout con todos los botones
+		// creamos un nuevo layout con todos los botones uno abajo del otro (de manera vertical) a la izquierda
 		VBox buttonsBox = new VBox(10);
 		buttonsBox.getChildren().addAll(toolsArr);
 		buttonsBox.getChildren().addAll(buttonsArr);
@@ -113,10 +113,10 @@ public class PaintPane extends BorderPane {
 		borderSize.setShowTickLabels(true);
 
 		//textbox para los counters y el string que indica la proxima operacion del undo
-		undoCounterText = new Label("");
-		redoCounterText = new Label("");
-		undoOperationText = new Label("");
-		redoOperationText = new Label("");
+		undoCounterText = new Label(""); //cantidad de operaciones en stack de undo
+		redoCounterText = new Label(""); //cantidad de operaciones en stack de redo
+		undoOperationText = new Label(""); //muestra operacion que hará si toco undo
+		redoOperationText = new Label(""); //muestra operacion que hara si toco redo
 
 		//posicionamiento de estas labels
 		undoOperationText.setMinWidth(300);
@@ -135,7 +135,9 @@ public class PaintPane extends BorderPane {
 		undoCounterText.setText("0");
 		redoCounterText.setText("0");
 
+		//creamos un nuevo layout de tipo horizontal, con los botones/labels apareciendo uno al lado del otro
 		HBox undoBox = new HBox(10);
+		//los adds lo hacemos en el order que queremos que aparezcan las labels/botones
 		undoBox.getChildren().addAll(undoOperationText, undoCounterText);
 		undoBox.getChildren().addAll(undoButton,redoButton);
 		undoBox.getChildren().addAll(redoCounterText, redoOperationText);
@@ -157,21 +159,20 @@ public class PaintPane extends BorderPane {
 		buttonsBox.getChildren().add(fillColorPicker);
 
 
-
-
-
 		// color pickers
 
 			// cuando se presiona al boton de cambiar color de relleno
 		fillColorPicker.setOnAction(event -> {
+			//try-catch por si no hay figura seleccionada
 			try {
 				selectedFigureExists();
+				//debemos crear un changeStatus de la figura para que quede registrado en el stack de undo
 				ChangeStatus changeStatus = new FillColorStatus(selectedFigure, canvasState, selectedFigure.getFillColor(),fillColorPicker.getValue());
 				canvasState.undoPush(changeStatus);
-
+				//actualizamos los labels de las proximas operaciones de undo/redo
 				undoOperationText.setText(canvasState.getUndoOperationString());
-				// !! aca
 				redoOperationText.setText(canvasState.getRedoOperationString());
+				//actualizamos el valor del contador de Undos y su label
 				undoCounter++;
 				undoCounterText.setText(String.format("%d", undoCounter));
 				fillColor = fillColorPicker.getValue();
@@ -185,13 +186,16 @@ public class PaintPane extends BorderPane {
 
 		// cuando se presiona al boton de cambiar color de borde
 		lineColorPicker.setOnAction(event -> {
+			//try-catch por si no hay figura seleccionada
 			try {
 				selectedFigureExists();
+				// creo un nuevo cambio, el cual sera cambiar el color del borde
 				ChangeStatus changeStatus = new BorderColorStatus(selectedFigure, canvasState, selectedFigure.getBorderColor(), lineColorPicker.getValue());
-				canvasState.undoPush(changeStatus);
+				canvasState.undoPush(changeStatus); // lo agrego al stack de changes del undo, por si lo quiero eliminar.
+				//actualizamos los labels de las proximas operaciones de undo/redo
 				undoOperationText.setText(canvasState.getUndoOperationString());
 				redoOperationText.setText(canvasState.getRedoOperationString());
-				// !! aca
+				// aumentamos la cantidad de cambios a deshacer y actualizamos su label
 				undoCounter++;
 				undoCounterText.setText(String.format("%d", undoCounter));
 				lineColor = lineColorPicker.getValue();
@@ -206,6 +210,7 @@ public class PaintPane extends BorderPane {
 		//slider para el cambiar el grosor del borde
 
 		borderSize.setOnMouseReleased(event -> {
+			//try catch por si no hay figura seleccionada
 			try{
 				selectedFigureExists();
 				selectedFigure.setBorderSize(borderSize.getValue());
@@ -296,17 +301,16 @@ public class PaintPane extends BorderPane {
 
 		// cuando se presiona el boton de agrandar
 		enlargeButton.setOnAction(event -> {
-			//A la selected figure (si es distinta de null) llamamos al metodo enlarge
-			
 			try {
 				selectedFigureExists();
+				// creo un nuevo cambio con la figura seleccionada y su tamanio antes de agrandarse.
 				ChangeStatus changeStatus = new EnlargeStatus(selectedFigure,canvasState);
-				canvasState.undoPush(changeStatus);
+				canvasState.undoPush(changeStatus); // lo agrego al stack del undo.
 				undoOperationText.setText(canvasState.getUndoOperationString());
-				undoCounter+=1;
+				undoCounter+=1; //incremento la cantidad de cambios a deshacer.
 				undoCounterText.setText(String.format("%d", undoCounter));
-				selectedFigure.enlarge();
-				redrawCanvas();
+				selectedFigure.enlarge(); //llamo al metodo para agrandar la figura.
+				redrawCanvas(); // actualizo el canvas.
 			}catch(NoSelectedFigureException ex){
 				System.out.println(ex.getMessage());
 			}
@@ -314,16 +318,16 @@ public class PaintPane extends BorderPane {
 		// se presiona el boton de reducir
 		reduceButton.setOnAction(event -> {
 
-			//A la selected figure (si es distinta de null) llamamos al metodo reduce
 			try {
 				selectedFigureExists();
+				// creo un nuevo cambio antes de reducir la figura.
 				ChangeStatus changeStatus = new ReduceStatus(selectedFigure, canvasState);
-				canvasState.undoPush(changeStatus);
+				canvasState.undoPush(changeStatus); // lo agrego al stack del undo.
 				undoOperationText.setText(canvasState.getUndoOperationString());
-				undoCounter++;
+				undoCounter++; // incremento la cantidad de cambios para deshacer.
 				undoCounterText.setText(String.format("%d", undoCounter));
-				selectedFigure.reduce();
-				redrawCanvas();
+				selectedFigure.reduce(); // llamo al metodo de la figura para que se reduzca
+				redrawCanvas(); //actualizo el canvas.
 			}catch(NoSelectedFigureException ex){
 				System.out.println(ex.getMessage());
 			}
@@ -335,7 +339,6 @@ public class PaintPane extends BorderPane {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
 				double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
-				//creamos clase abstracta en Figure llamada move entonces solo hacemos selectedFigure.move()
 				if(selectedFigure!=null) selectedFigure.getFigure().move(diffX, diffY);
 				redrawCanvas();
 			}
@@ -360,19 +363,19 @@ public class PaintPane extends BorderPane {
 
 		// SE PRESIONA EL BOTON DE DESHACER EL CAMBIO
 		undoButton.setOnAction(event->{
-			//if(undoCounter == 0) return;
+
 			try {
-				ChangeStatus status = canvasState.getUndo();
+				ChangeStatus status = canvasState.getUndo(); // status es el ultimo cambio realizado
 
 			undoOperationText.setText(canvasState.getUndoOperationString());
 			redoOperationText.setText(canvasState.getRedoOperationString()); // !! aca
-			status.executeOperation();
-			undoCounter -=1;
-			redoCounter +=1;
+			status.executeOperation(); // como es un undo, llamo al metodo executeOperation del ultimo cambio.
+			undoCounter -=1; // decremento las operaciones para deshacer.
+			redoCounter +=1; // incremento las de rehacer.
 			undoCounterText.setText(String.format("%d", undoCounter));
 			redoCounterText.setText(String.format("%d", redoCounter));
-			redrawCanvas();
-			}catch(NothingToUndoException ex){
+			redrawCanvas(); // actualizacion del canvas.
+			}catch(NothingToUndoException ex){ // creamos un popup con alerta en el caso de que se quiera deshacer un cambio inexistente.
 				System.out.println(ex.getMessage());
 				Alert alert = new Alert(Alert.AlertType.INFORMATION);
 				alert.setTitle("Undo Error");
@@ -385,16 +388,16 @@ public class PaintPane extends BorderPane {
 		// SE PRESIONA EL BOTON DE REHACER EL CAMBIO
 		redoButton.setOnAction(event ->{
 			try {
-				ChangeStatus status = canvasState.getRedo();
-				status.executeInverseOperation();
+				ChangeStatus status = canvasState.getRedo(); // agarramos el ultimo cambio deshecho.
+				status.executeInverseOperation(); // llamamos a la operacion invertida pues queremos rehacer ese cambio.
 				undoOperationText.setText(canvasState.getUndoOperationString()); // !! aca
 				redoOperationText.setText(canvasState.getRedoOperationString());
-				undoCounter += 1;
-				redoCounter -= 1;
+				undoCounter += 1; // aumentamos los cambios a deshacer
+				redoCounter -= 1; // decrementamos los cambios para rehacer.
 				undoCounterText.setText(String.format("%d", undoCounter));
 				redoCounterText.setText(String.format("%d", redoCounter));
-				redrawCanvas();
-			}catch(NothingToRedoException ex){
+				redrawCanvas(); // actualizamos el canvas.
+			}catch(NothingToRedoException ex){ //creamos un nuevo popup si no hay cambios por rehacer.
 				System.out.println(ex.getMessage());
 				Alert alert = new Alert(Alert.AlertType.INFORMATION);
 				alert.setTitle("Redo Error");
@@ -420,13 +423,11 @@ public class PaintPane extends BorderPane {
 				//si la figura esta seleccionada queremos que su borde sea rojo
 				gc.setStroke(Color.RED);
 			} else {
-				//si la figura no esta seleccionada, el borde es del color defualt o el seteado por el user
-				gc.setStroke(figure.getBorderColor());
+
+				gc.setStroke(figure.getBorderColor()); //si la figura no esta seleccionada, el borde es del color defualt o el seteado por el user
 			}
-			//cambiamos el color de relleno de la figura:
-			gc.setFill(figure.getFillColor());
-			//cambiamos el grosor del border de la figura:
-			gc.setLineWidth(figure.getBorderSize());
+			gc.setFill(figure.getFillColor()); //cambiamos el color de relleno de la figura:
+			gc.setLineWidth(figure.getBorderSize()); 	//cambiamos el grosor del border de la figura:
 			//en vez de los ifs con instanceof, creamos metodos abstractos en Figure para fill y stroke:
 			figure.fill(gc);
 			figure.stroke(gc);
@@ -434,14 +435,16 @@ public class PaintPane extends BorderPane {
 		}
 	}
 
-	// metodo que retorna true si la figura que recibe por paramtero esta presenta en el "pixel" eventPoint
+	// metodo que retorna true si la figura que recibe por paramtero esta presente en el "pixel" eventPoint
+
 	boolean figureBelongs(FrontFigure figure, Point eventPoint) {
 		return figure.figureBelongs(eventPoint);
 	}
 
 	// tira la exception en el caso de que no se haya seleccionado ninguna Figure
+
 	private void selectedFigureExists() throws NoSelectedFigureException{
-		//tira una exception si no hay una figura seleccionada
+
 		if(selectedFigure == null)
 			throw new NoSelectedFigureException();
 	}

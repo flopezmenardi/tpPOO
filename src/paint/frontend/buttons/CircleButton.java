@@ -3,8 +3,6 @@ package paint.frontend.buttons;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import paint.backend.model.Circle;
-import paint.backend.model.Ellipse;
-import paint.backend.model.Figure;
 import paint.backend.model.Point;
 import paint.frontend.FrontendFigures.FrontEllipse;
 import paint.frontend.FrontendFigures.FrontFigure;
@@ -14,6 +12,8 @@ public class CircleButton extends FigureButton{
         super(name);
     }
 
+    // retornamos un Ellipse pues un circulo es una ellipse , y despues el toString
+    // del circulo se opcupa de que aparezca el nombre de la figura correspondiente
     @Override
     public FrontFigure drawFigure(Point startPoint, Point endPoint, Color fillColor, Color borderColor, double borderSize, GraphicsContext gc) {
         double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
