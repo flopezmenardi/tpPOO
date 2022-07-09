@@ -70,4 +70,9 @@ public class Ellipse extends Figure {
     public Figure copyBackFigure() {
         return new Ellipse(centerPoint,sMayorAxis,sMinorAxis);
     }
+
+    @Override
+    public String getFigureShape(){
+        return "Elipse";
+    }
 }

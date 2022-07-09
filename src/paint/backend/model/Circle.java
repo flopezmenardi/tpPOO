@@ -26,4 +26,9 @@ public class Circle extends Ellipse {
     public Figure copyBackFigure(){
         return new Circle(getCenterPoint(),getRadius());
     }
+
+    @Override
+    public String getFigureShape(){
+        return "Circulo";
+    }
 }

@@ -1,5 +1,7 @@
 package paint.backend;
 
+import paint.backend.Exceptions.NothingToRedoException;
+import paint.backend.Exceptions.NothingToUndoException;
 import paint.backend.Statuses.ChangeStatus;
 import paint.frontend.FrontendFigures.FrontFigure;
 
@@ -10,7 +12,8 @@ public class CanvasState {
     private final List<FrontFigure> list = new ArrayList<>();
 
     public void addFigure(FrontFigure figure) {
-        list.add(figure);
+        if (figure != null)
+            list.add(figure);
     }
 
     public void deleteFigure(FrontFigure figure) {
@@ -38,14 +41,26 @@ public class CanvasState {
         undoStack.push(status);
     }
     
-    public ChangeStatus getUndo(){
+    public ChangeStatus getUndo() throws NothingToUndoException{
 //        return stackOperation(undoStack, redoStack);
+        if(undoStack.isEmpty())
+            throw new NothingToUndoException();
         ChangeStatus aux =undoStack.pop();
-        redoStack.push(aux);
+//        redoStack.push(aux);
         return aux;
     }
 
-    public ChangeStatus getRedo(){
+    public void pushRedo(ChangeStatus status){
+        this.redoStack.push(status);
+    }
+
+    public void pushUndo(ChangeStatus status){
+        this.undoStack.push(status);
+    }
+
+    public ChangeStatus getRedo() throws NothingToRedoException{
+        if(redoStack.isEmpty())
+           throw new NothingToRedoException();
       ChangeStatus aux = redoStack.pop();
       undoStack.push(aux);
       return aux;
@@ -60,7 +75,7 @@ public class CanvasState {
         //para esto debo hacer un peek del ultimo changeStatus en el stack de undo y acceder al string de su enum
         if(undoStack.empty())
             return "";
-        return undoStack.peek().getOperationString();
+        return undoStack.peek().toString();
     }
 
 }

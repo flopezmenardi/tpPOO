@@ -17,4 +17,9 @@ public class Square extends Rectangle {
         return new Square(getTopLeft(),size);
     }
 
+    @Override
+    public String getFigureShape(){
+        return "Cuadrado";
+    }
+
 }

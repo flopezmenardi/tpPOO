@@ -74,4 +74,9 @@ public class Rectangle extends Figure {
     public Figure copyBackFigure(){
         return new Rectangle(topLeft, bottomRight);
     }
+
+    @Override
+    public String getFigureShape(){
+        return "Rectangulo";
+    }
 }

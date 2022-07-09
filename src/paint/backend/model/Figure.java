@@ -23,4 +23,6 @@ public abstract class Figure implements Movable {
     public abstract boolean containsPoint(Point eventPoint);
     //este metodo nos retorna una copia de la figura:
     public abstract Figure copyBackFigure();
+    //me retorna que tipo de figura es, para el string que va al lado del undo button
+    public abstract String getFigureShape();
 }
