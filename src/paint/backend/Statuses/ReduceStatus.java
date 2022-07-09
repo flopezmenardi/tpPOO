@@ -21,6 +21,7 @@ public class ReduceStatus extends ResizeStatus{
         getFigure().reduce();
     }
 
+    //el string que aparecerá al lado del undo/redo button como proxima operacion para hacerle undo/redo
     @Override
     public String toString(){
         return String.format("Achicar %s", getFigure().getFigure().getFigureShape());

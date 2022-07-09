@@ -27,6 +27,7 @@ public class FillColorStatus extends ChangeStatus{
         getFigure().setFillColor(this.actualColor);
     }
 
+    //el string que aparecerá al lado del undo/redo button como proxima operacion para hacerle undo/redo
     @Override
     public String toString(){
         return String.format("Cambiar color de relleno de %s", getFigure().getFigure().getFigureShape());

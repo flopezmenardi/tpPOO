@@ -282,6 +282,7 @@ public class PaintPane extends BorderPane {
 				boolean found = false;
 				StringBuilder label = new StringBuilder("Se seleccionó: ");
 				for (FrontFigure figure : canvasState.figures()) {
+					//recorre todas las figuras y si el punto pertenece a alguna, seteamos el flag en true
 					if(figureBelongs(figure, eventPoint)) {
 						found = true;
 						selectedFigure = figure;
@@ -301,6 +302,7 @@ public class PaintPane extends BorderPane {
 
 		// cuando se presiona el boton de agrandar
 		enlargeButton.setOnAction(event -> {
+			//try catch por si no hay figura seleccionada
 			try {
 				selectedFigureExists();
 				// creo un nuevo cambio con la figura seleccionada y su tamanio antes de agrandarse.
@@ -308,7 +310,7 @@ public class PaintPane extends BorderPane {
 				canvasState.undoPush(changeStatus); // lo agrego al stack del undo.
 				undoOperationText.setText(canvasState.getUndoOperationString());
 				undoCounter+=1; //incremento la cantidad de cambios a deshacer.
-				undoCounterText.setText(String.format("%d", undoCounter));
+				undoCounterText.setText(String.format("%d", undoCounter)); //actualizo el label del undoCounter
 				selectedFigure.enlarge(); //llamo al metodo para agrandar la figura.
 				redrawCanvas(); // actualizo el canvas.
 			}catch(NoSelectedFigureException ex){
@@ -317,15 +319,16 @@ public class PaintPane extends BorderPane {
 		});
 		// se presiona el boton de reducir
 		reduceButton.setOnAction(event -> {
-
+			//try catch por si no hay figura seleccionada
 			try {
 				selectedFigureExists();
 				// creo un nuevo cambio antes de reducir la figura.
 				ChangeStatus changeStatus = new ReduceStatus(selectedFigure, canvasState);
 				canvasState.undoPush(changeStatus); // lo agrego al stack del undo.
+				//actualizo la operacion que aparecera como proxima para hacer undo
 				undoOperationText.setText(canvasState.getUndoOperationString());
 				undoCounter++; // incremento la cantidad de cambios para deshacer.
-				undoCounterText.setText(String.format("%d", undoCounter));
+				undoCounterText.setText(String.format("%d", undoCounter)); //actualizo label de undoCounter
 				selectedFigure.reduce(); // llamo al metodo de la figura para que se reduzca
 				redrawCanvas(); //actualizo el canvas.
 			}catch(NoSelectedFigureException ex){
@@ -339,6 +342,7 @@ public class PaintPane extends BorderPane {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
 				double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
+				//si hay una figura seleccionada y user draggea mouse, figura se debe mover
 				if(selectedFigure!=null) selectedFigure.getFigure().move(diffX, diffY);
 				redrawCanvas();
 			}
@@ -346,16 +350,17 @@ public class PaintPane extends BorderPane {
 
 		// cuando se presiona al boton de BORRAR FIGURA
 		deleteButton.setOnAction(event -> {
+			//try catch por si no hay figura seleccionada
 			try {
 				selectedFigureExists();
 				ChangeStatus aux = new DeleteStatus(selectedFigure,canvasState);
-				canvasState.undoPush(aux);
-				undoOperationText.setText(canvasState.getUndoOperationString());
-				undoCounter++;
-				undoCounterText.setText(String.format("%d", undoCounter));
-				canvasState.deleteFigure(selectedFigure);
+				canvasState.undoPush(aux); //agrego al stack esta operacion
+				undoOperationText.setText(canvasState.getUndoOperationString());//actualizo label del stack de undo
+				undoCounter++; //incremento contador de operaciones en el stack de undo
+				undoCounterText.setText(String.format("%d", undoCounter)); //actualizo el label del contador
+				canvasState.deleteFigure(selectedFigure); //borro la figura
 				selectedFigure = null;
-				redrawCanvas();
+				redrawCanvas(); //actualizo canvas
 			}catch (NoSelectedFigureException ex){
 				System.out.println(ex.getMessage());
 			}
@@ -363,42 +368,50 @@ public class PaintPane extends BorderPane {
 
 		// SE PRESIONA EL BOTON DE DESHACER EL CAMBIO
 		undoButton.setOnAction(event->{
-
+			//try catch por si no hay figura seleccionada
 			try {
 				ChangeStatus status = canvasState.getUndo(); // status es el ultimo cambio realizado
-
+			//actualizo las labels del stack de undo y redo
 			undoOperationText.setText(canvasState.getUndoOperationString());
 			redoOperationText.setText(canvasState.getRedoOperationString()); // !! aca
 			status.executeOperation(); // como es un undo, llamo al metodo executeOperation del ultimo cambio.
 			undoCounter -=1; // decremento las operaciones para deshacer.
 			redoCounter +=1; // incremento las de rehacer.
+				//actualizo las labels de los contadores de los stacks
 			undoCounterText.setText(String.format("%d", undoCounter));
 			redoCounterText.setText(String.format("%d", redoCounter));
 			redrawCanvas(); // actualizacion del canvas.
 			}catch(NothingToUndoException ex){ // creamos un popup con alerta en el caso de que se quiera deshacer un cambio inexistente.
 				System.out.println(ex.getMessage());
+				//no solo imprimimos por salida estandar el mensaje de nothing to undo, si no que tambien creamos
+				//un pop-up informativo que le avisa al usuario que no hay nada para hacerle undo
 				Alert alert = new Alert(Alert.AlertType.INFORMATION);
 				alert.setTitle("Undo Error");
 				alert.setHeaderText("");
 				alert.setContentText("There is nothing to undo");
-				alert.showAndWait(); //codigo no sigue hasta q user cierra este popup
+				alert.showAndWait(); //codigo no sigue hasta que user cierra este popup
 			}
 		});
 
 		// SE PRESIONA EL BOTON DE REHACER EL CAMBIO
 		redoButton.setOnAction(event ->{
+			//try catch por si no hay figura seleccionada
 			try {
 				ChangeStatus status = canvasState.getRedo(); // agarramos el ultimo cambio deshecho.
 				status.executeInverseOperation(); // llamamos a la operacion invertida pues queremos rehacer ese cambio.
-				undoOperationText.setText(canvasState.getUndoOperationString()); // !! aca
+				//actualizo las labels del stack de undo y redo
+				undoOperationText.setText(canvasState.getUndoOperationString());
 				redoOperationText.setText(canvasState.getRedoOperationString());
 				undoCounter += 1; // aumentamos los cambios a deshacer
 				redoCounter -= 1; // decrementamos los cambios para rehacer.
+				//actualizo las labels de los contadores de los stacks
 				undoCounterText.setText(String.format("%d", undoCounter));
 				redoCounterText.setText(String.format("%d", redoCounter));
 				redrawCanvas(); // actualizamos el canvas.
 			}catch(NothingToRedoException ex){ //creamos un nuevo popup si no hay cambios por rehacer.
 				System.out.println(ex.getMessage());
+				//no solo imprimimos por salida estandar el mensaje de nothing to redo, si no que tambien creamos
+				//un pop-up informativo que le avisa al usuario que no hay nada para hacerle redo
 				Alert alert = new Alert(Alert.AlertType.INFORMATION);
 				alert.setTitle("Redo Error");
 				alert.setHeaderText("");
@@ -418,20 +431,19 @@ public class PaintPane extends BorderPane {
 	// metodo que sirve para actualizar el canvas con los cambios realizados hasta el momento
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		//for-each para recorrer todas las figuras en la lista del canvasState
 		for(FrontFigure figure : canvasState.figures()) {
 			if(figure == selectedFigure) {
 				//si la figura esta seleccionada queremos que su borde sea rojo
 				gc.setStroke(Color.RED);
 			} else {
-
-				gc.setStroke(figure.getBorderColor()); //si la figura no esta seleccionada, el borde es del color defualt o el seteado por el user
+				//si la figura no esta seleccionada, el borde es del color defualt o el seteado por el user
+				gc.setStroke(figure.getBorderColor());
 			}
 			gc.setFill(figure.getFillColor()); //cambiamos el color de relleno de la figura:
-			gc.setLineWidth(figure.getBorderSize()); 	//cambiamos el grosor del border de la figura:
-			//en vez de los ifs con instanceof, creamos metodos abstractos en Figure para fill y stroke:
+			gc.setLineWidth(figure.getBorderSize()); 	//cambiamos el grosor del borde de la figura:
 			figure.fill(gc);
 			figure.stroke(gc);
-
 		}
 	}
 

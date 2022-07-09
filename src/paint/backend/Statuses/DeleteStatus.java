@@ -22,6 +22,7 @@ public class DeleteStatus extends ChangeStatus{
         getCanvasState().deleteFigure(getFigure());
     }
 
+    //el string que aparecerá al lado del undo/redo button como proxima operacion para hacerle undo/redo
     @Override
     public String toString(){
         return String.format("Borrar el %s", getFigure().getFigure().getFigureShape());

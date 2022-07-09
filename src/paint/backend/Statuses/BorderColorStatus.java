@@ -25,6 +25,7 @@ public class BorderColorStatus extends ChangeStatus{
         getFigure().setBorderColor(this.actualColor);
     }
 
+    //el string que aparecerá al lado del undo/redo button como proxima operacion para hacerle undo/redo
     @Override
     public String toString(){
         return String.format("Cambiar color de borde de %s", getFigure().getFigure().getFigureShape());

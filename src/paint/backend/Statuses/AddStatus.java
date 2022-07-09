@@ -22,6 +22,7 @@ public class AddStatus extends ChangeStatus{
     getCanvasState().addFigure(getFigure());
     }
 
+    //el string que aparecerá al lado del undo/redo button como proxima operacion para hacerle undo/redo
     @Override
     public String toString(){
         return String.format("Agregar el %s", getFigure().getFigure().getFigureShape());

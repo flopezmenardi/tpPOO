@@ -22,6 +22,7 @@ public class EnlargeStatus extends ResizeStatus{
         getFigure().enlarge();
     }
 
+    //el string que aparecerá al lado del undo/redo button como proxima operacion para hacerle undo/redo
     @Override
     public String toString(){
         return String.format("Agrandar %s", getFigure().getFigure().getFigureShape());
